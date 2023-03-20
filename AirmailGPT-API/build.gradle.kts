@@ -19,6 +19,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("org.jsoup:jsoup:1.15.4")
+	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
+	implementation("org.mozilla:rhino:1.7R4")
+
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
