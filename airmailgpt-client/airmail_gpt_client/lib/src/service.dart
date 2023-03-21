@@ -1,0 +1,1 @@
+export 'package:airmail_gpt_client/src/services/message_service.dart';
