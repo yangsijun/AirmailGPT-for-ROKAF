@@ -5,6 +5,8 @@ import 'package:airmail_gpt_client/src/controller.dart';
 
 import 'package:airmail_gpt_client/res/setting.dart';
 
+import 'package:reorderables/reorderables.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, this.title = 'AirmailGPT for ROKAF'}) : super(key: key);
 
@@ -169,11 +171,11 @@ class _HomePageState extends StateMVC<HomePage> {
                                       style: Theme.of(context).textTheme.bodyMedium,
                                     ),
                                     Text(
-                                      '- 키워드는 주제에 관련된 단어 또는 문장, 호칭, 어투 등을 입력할 수 있습니다.',
+                                      '- 키워드는 주제에 관련된 단어 또는 문장, 호칭, 어투 등을 입력할 수 있습니다. (최대 10개)',
                                       style: Theme.of(context).textTheme.bodyMedium,
                                     ),
                                     Text(
-                                      '- 키워드는 쉼표(,)로 구분하여 한 번에 여러 개를 입력할 수 있으며, 최대 10개까지 입력할 수 있습니다.',
+                                      '- 키워드는 쉼표(,)로 구분하여 한 번에 여러 개를 입력할 수 있으며, 드래그해서 순서를 변경할 수 있습니다.',
                                       style: Theme.of(context).textTheme.bodyMedium,
                                     ),
                                     Text(
@@ -188,8 +190,13 @@ class _HomePageState extends StateMVC<HomePage> {
                                     minHeight: 96,
                                   ),
                                   width: double.infinity,
-                                  child: Wrap(
+                                  child: ReorderableWrap(
+                                    buildDraggableFeedback: (context, constraints, child) => Material(
+                                      color: Colors.transparent,
+                                      child: child,
+                                    ),
                                     spacing: 8,
+                                    onReorder: (int oldIndex, int newIndex) => con.reorderSeed(oldIndex, newIndex),
                                     children: con.seedChipList,
                                   ),
                                 ),

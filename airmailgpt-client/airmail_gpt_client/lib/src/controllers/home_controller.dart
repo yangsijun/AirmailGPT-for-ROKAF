@@ -71,12 +71,14 @@ class HomeController extends ControllerMVC {
         continue;
       }
       seedList.add(element);
-      seedChipList.add(Chip(
-        label: Text(element),
-        onDeleted: () {
-          removeSeedWord(element);
-        },
-      ));
+      seedChipList.add(
+        Chip(          
+          label: Text(element),
+          onDeleted: () {
+            removeSeedWord(element);
+          },
+        )
+      );
     }
 
     seedWord = '';
@@ -87,6 +89,14 @@ class HomeController extends ControllerMVC {
   void removeSeedWord(String word) {
     seedList.remove(word);
     seedChipList.removeWhere((element) => element.label.toString() == Text(word).toString());
+    refresh();
+  }
+
+  void reorderSeed(int oldIndex, int newIndex) {
+    final String seedItem = seedList.removeAt(oldIndex);
+    seedList.insert(newIndex, seedItem);
+    final Chip seedChipItem = seedChipList.removeAt(oldIndex);
+    seedChipList.insert(newIndex, seedChipItem);
     refresh();
   }
 }
