@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/services.dart';
 
 import 'package:airmail_gpt_client/src/view.dart';
@@ -23,6 +25,8 @@ class _HomePageState extends StateMVC<HomePage> {
 
   late HomeController con;
 
+  final FocusNode outFocusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -30,9 +34,7 @@ class _HomePageState extends StateMVC<HomePage> {
     appState = rootState!;
 
     var con = appState.controller;
-
     con = appState.controllerByType<AppController>();
-
     con = appState.controllerById(con?.keyId);
   }
 
@@ -61,7 +63,7 @@ class _HomePageState extends StateMVC<HomePage> {
 
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).requestFocus(FocusNode());
+        FocusScope.of(context).requestFocus(outFocusNode);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -90,9 +92,9 @@ class _HomePageState extends StateMVC<HomePage> {
                                   labelText: '받는 사람 이름',
                                 ),
                                 validator: (value) => value!.isEmpty ? '받는 사람 이름을 입력해주세요' : null,
-                                focusNode: FocusNode(),
-                                initialValue: airmanName,
+                                initialValue: constantAirmanName,
                                 readOnly: true,
+                                textInputAction: TextInputAction.next,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -104,9 +106,9 @@ class _HomePageState extends StateMVC<HomePage> {
                                   labelText: '받는 사람 생년월일',
                                 ),
                                 validator: (value) => value!.isEmpty ? '받는 사람 생년월일을 입력해주세요' : null,
-                                focusNode: FocusNode(),
-                                initialValue: airmanBirth,
+                                initialValue: constantAirmanBirth,
                                 readOnly: true,
+                                textInputAction: TextInputAction.next,
                               ),
                             ),
                           ],
@@ -119,7 +121,8 @@ class _HomePageState extends StateMVC<HomePage> {
                           labelText: '보내는 사람 이름',
                         ),
                         validator: (value) => value!.isEmpty ? '보내는 사람 이름을 입력해주세요' : null,
-                        focusNode: FocusNode(),
+                        initialValue: con.senderName,
+                        textInputAction: TextInputAction.next,
                         onChanged: (value) => con.senderName = value,
                       ),
                       const SizedBox(height: 16),
@@ -135,11 +138,13 @@ class _HomePageState extends StateMVC<HomePage> {
                           if (value.length != 4) {
                             return '비밀번호는 숫자 4자리이어야 합니다';
                           }
+                          return null;
                         },
-                        focusNode: FocusNode(),
+                        initialValue: con.password,
                         obscureText: true,
                         keyboardType: TextInputType.number,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        textInputAction: TextInputAction.next,
                         onChanged: (value) => con.password = value,
                       ),
                       const SizedBox(height: 16),
@@ -201,7 +206,7 @@ class _HomePageState extends StateMVC<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                TextField(
+                                TextFormField(
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
                                     labelText: '키워드 추가',
@@ -211,9 +216,10 @@ class _HomePageState extends StateMVC<HomePage> {
                                       icon: const Icon(Icons.add),
                                     ),
                                   ),
-                                  focusNode: FocusNode(),
                                   onChanged: (value) => con.seedWord = value,
-                                  onEditingComplete: doAddSeedWord,
+                                  onEditingComplete: () {
+                                    doAddSeedWord();
+                                  },
                                 ),
                               ],
                             ),

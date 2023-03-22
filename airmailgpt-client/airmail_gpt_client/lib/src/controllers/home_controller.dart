@@ -16,7 +16,7 @@ class HomeController extends ControllerMVC {
   String get airmanName => _model.airmanName ??= '';
   String get airmanBirth => _model.airmanBirth ??= '';
   String get senderName => _model.senderName ??= '';
-  String get relationship => _model.relationship!;
+  String get relationship => _model.relationship ??= '';
   List<String> get seedList => _model.seedList ??= <String>[];
   List<Chip> get seedChipList => _model.seedChipList ??= <Chip>[];
   String get seedWord => _model.seedWord ??= '';
@@ -80,7 +80,6 @@ class HomeController extends ControllerMVC {
         )
       );
     }
-
     seedWord = '';
     refresh();
     return (errorMessages.isEmpty) ? null : errorMessages;
