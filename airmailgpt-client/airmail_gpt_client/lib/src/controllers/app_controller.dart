@@ -7,7 +7,7 @@ class AppController extends ControllerMVC {
 
   @override
   Future<bool> initAsync() async {
-    return Future.delayed(const Duration(seconds: 10), () {
+    return Future.delayed(const Duration(seconds: 1), () {
       return true;
     });
   }
