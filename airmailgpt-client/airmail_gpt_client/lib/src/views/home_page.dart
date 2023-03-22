@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'package:airmail_gpt_client/src/view.dart';
 import 'package:airmail_gpt_client/src/controller.dart';
 
@@ -107,10 +109,18 @@ class _HomePageState extends StateMVC<HomePage> {
                           border: OutlineInputBorder(),
                           labelText: '비밀번호',
                         ),
-                        validator: (value) => value!.isEmpty ? '비밀번호를 입력해주세요' : null,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return '비밀번호를 입력해주세요';
+                          }
+                          if (value.length != 4) {
+                            return '비밀번호는 숫자 4자리이어야 합니다';
+                          }
+                        },
                         focusNode: FocusNode(),
                         obscureText: true,
                         keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         onChanged: (value) => con.password = value,
                       ),
                       const SizedBox(height: 16),
