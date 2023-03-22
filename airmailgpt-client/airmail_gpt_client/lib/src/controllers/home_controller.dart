@@ -51,27 +51,37 @@ class HomeController extends ControllerMVC {
     _service.sendMessage(_model);
   }
 
-  String? addSeedWord() {
+  List<String>? addSeedWord() {
+    List<String> errorMessages = <String>[];
     String word = seedWord.trim();
-    
+
     if (word.isEmpty) {
-      return '키워드를 입력해주세요.';
-    } else if (seedList.length >= 10) {
-      return '키워드는 최대 10개까지만 추가할 수 있습니다.';
-    } else if (seedList.contains(word)) {
-      return '이미 추가된 키워드입니다.';
+      errorMessages.add('키워드를 입력해주세요.');
+      return errorMessages;
     }
-    seedList.add(word);
-    seedChipList.add(Chip(
-      label: Text(word),
-      onDeleted: () {
-        removeSeedWord(word);
-      },
-    ));
+
+    for (String element in word.split(',')) {
+      element = element.trim();
+
+      if (seedList.length >= 10) {
+        errorMessages.add('키워드는 최대 10개까지만 추가할 수 있습니다.');
+        return errorMessages;
+      } else if (seedList.contains(element)) {
+        errorMessages.add('\'$element\'는 이미 추가된 키워드입니다.');
+        continue;
+      }
+      seedList.add(element);
+      seedChipList.add(Chip(
+        label: Text(element),
+        onDeleted: () {
+          removeSeedWord(element);
+        },
+      ));
+    }
 
     seedWord = '';
     refresh();
-    return null;
+    return (errorMessages.isEmpty) ? null : errorMessages;
   }
 
   void removeSeedWord(String word) {

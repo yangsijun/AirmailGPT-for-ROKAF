@@ -40,6 +40,23 @@ class _HomePageState extends StateMVC<HomePage> {
   Widget buildWidget(BuildContext context) {
     final formKey = GlobalKey<FormState>();
 
+    void doAddSeedWord() {
+      List<String>? result = con.addSeedWord();
+      if (result == null) return;
+      for (String element in result) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(element),
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: '확인',
+              onPressed: () {},
+            )
+          ),
+        );
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -124,10 +141,7 @@ class _HomePageState extends StateMVC<HomePage> {
                         onChanged: (value) => con.password = value,
                       ),
                       const SizedBox(height: 16),
-                      Container(
-                        constraints: const BoxConstraints(
-                          minHeight: 200,
-                        ),
+                      SizedBox(
                         width: double.infinity,
                         child: Card(
                           margin: EdgeInsets.zero,
@@ -142,46 +156,57 @@ class _HomePageState extends StateMVC<HomePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                ListView(
+                                  shrinkWrap: true,
                                   children: [
                                     Text(
                                       '편지 키워드',
                                       style: Theme.of(context).textTheme.titleLarge,
                                     ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '- 편지에 들어갈 키워드를 입력해주세요.',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      '- 키워드는 주제에 관련된 단어 또는 문장, 호칭, 어투 등을 입력할 수 있습니다.',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      '- 키워드는 쉼표(,)로 구분하여 한 번에 여러 개를 입력할 수 있으며, 최대 10개까지 입력할 수 있습니다.',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                    Text(
+                                      '- 키워드 예시: 응원, 수고, 뭐 먹었어?, ○○ 오빠, 반말로',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                                Wrap(
-                                  spacing: 8,
-                                  children: con.seedChipList,
+                                Container(
+                                  constraints: const BoxConstraints(
+                                    minHeight: 96,
+                                  ),
+                                  width: double.infinity,
+                                  child: Wrap(
+                                    spacing: 8,
+                                    children: con.seedChipList,
+                                  ),
                                 ),
+                                const SizedBox(height: 8),
                                 TextField(
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
                                     labelText: '키워드 추가',
                                     suffixIcon: IconButton(
                                       padding: const EdgeInsets.all(20),
-                                      onPressed: () {
-                                        String? result = con.addSeedWord();
-                                        if (result == null) return;
-                                        
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          SnackBar(
-                                            content: Text(result),
-                                            duration: const Duration(seconds: 3),
-                                            action: SnackBarAction(
-                                              label: '확인',
-                                              onPressed: () {},
-                                            )
-                                          ),
-                                        );
-                                      },
+                                      onPressed: doAddSeedWord,
                                       icon: const Icon(Icons.add),
                                     ),
                                   ),
                                   focusNode: FocusNode(),
                                   onChanged: (value) => con.seedWord = value,
+                                  onEditingComplete: doAddSeedWord,
                                 ),
                               ],
                             ),
