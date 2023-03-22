@@ -13,9 +13,70 @@ class HomeController extends ControllerMVC {
   final MessageModel _model;
   final MessageService _service;
 
-  MessageModel get model => _model;
+  String get airmanName => _model.airmanName ??= '';
+  String get airmanBirth => _model.airmanBirth ??= '';
+  String get senderName => _model.senderName ??= '';
+  String get relationship => _model.relationship!;
+  List<String> get seedList => _model.seedList ??= <String>[];
+  List<Chip> get seedChipList => _model.seedChipList ??= <Chip>[];
+  String get seedWord => _model.seedWord ??= '';
+  String get password => _model.password ??= '';
+
+  set airmanName(String value) {
+    _model.airmanName = value;
+  }
+  set airmanBirth(String value) {
+    _model.airmanBirth = value;
+  }
+  set senderName(String value) {
+    _model.senderName = value;
+  }
+  set relationship(String value) {
+    _model.relationship = value;
+  }
+  set seedList(List<String> value) {
+    _model.seedList = value;
+  }
+  set seedWord(String value) {
+    _model.seedWord = value;
+  }
+  set password(String value) {
+    _model.password = value;
+  }
+  set seedChipList(List<Chip> value) {
+    _model.seedChipList = value;
+  }
 
   void sendMessage() {
     _service.sendMessage(_model);
+  }
+
+  String? addSeedWord() {
+    String word = seedWord.trim();
+    
+    if (word.isEmpty) {
+      return '키워드를 입력해주세요.';
+    } else if (seedList.length >= 10) {
+      return '키워드는 최대 10개까지만 추가할 수 있습니다.';
+    } else if (seedList.contains(word)) {
+      return '이미 추가된 키워드입니다.';
+    }
+    seedList.add(word);
+    seedChipList.add(Chip(
+      label: Text(word),
+      onDeleted: () {
+        removeSeedWord(word);
+      },
+    ));
+
+    seedWord = '';
+    refresh();
+    return null;
+  }
+
+  void removeSeedWord(String word) {
+    seedList.remove(word);
+    seedChipList.removeWhere((element) => element.label.toString() == Text(word).toString());
+    refresh();
   }
 }

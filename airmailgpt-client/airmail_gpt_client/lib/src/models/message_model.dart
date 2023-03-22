@@ -9,14 +9,18 @@ class MessageModel extends ModelMVC {
   String? _airmanBirth;
   String? _senderName;
   String? _relationship;
-  String? _seed;
+  List<String>? _seedList;
+  List<Chip>? _seedChipList;
+  String? _seedWord;
   String? _password;
 
   String? get airmanName => _airmanName;
   String? get airmanBirth => _airmanBirth;
   String? get senderName => _senderName;
   String? get relationship => _relationship;
-  String? get seed => _seed;
+  List<String>? get seedList => _seedList;
+  List<Chip>? get seedChipList => _seedChipList;
+  String? get seedWord => _seedWord;
   String? get password => _password;
 
   set airmanName(String? value) {
@@ -35,8 +39,16 @@ class MessageModel extends ModelMVC {
     _relationship = value;
     refresh();
   }
-  set seed(String? value) {
-    _seed = value;
+  set seedList(List<String>? value) {
+    _seedList = value;
+    refresh();
+  }
+  set seedChipList(List<Chip>? value) {
+    _seedChipList = value;
+    refresh();
+  }
+  set seedWord(String? value) {
+    _seedWord = value;
     refresh();
   }
   set password(String? value) {
