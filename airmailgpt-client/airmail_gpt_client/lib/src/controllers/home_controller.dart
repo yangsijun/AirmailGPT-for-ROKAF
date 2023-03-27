@@ -62,8 +62,10 @@ class HomeController extends ControllerMVC {
 
     for (String element in word.split(',')) {
       element = element.trim();
-
-      if (seedList.length >= 10) {
+      if (element.isEmpty) {
+        errorMessages.add('키워드를 입력해주세요.');
+        continue;
+      } else if (seedList.length >= 10) {
         errorMessages.add('키워드는 최대 10개까지만 추가할 수 있습니다.');
         return errorMessages;
       } else if (seedList.contains(element)) {

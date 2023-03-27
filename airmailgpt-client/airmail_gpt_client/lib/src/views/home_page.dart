@@ -26,6 +26,8 @@ class _HomePageState extends StateMVC<HomePage> {
   final FocusNode outFocusNode = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
+  
+  final seedWordText = TextEditingController();
 
   final List<DropdownMenuEntry<String>> relationshipDropdownEntries = [
     DropdownMenuEntry<String>(
@@ -55,6 +57,7 @@ class _HomePageState extends StateMVC<HomePage> {
     var con = appState.controller;
     con = appState.controllerByType<AppController>();
     con = appState.controllerById(con?.keyId);
+
   }
 
   late AppStateMVC appState;
@@ -273,9 +276,11 @@ class _HomePageState extends StateMVC<HomePage> {
                                       icon: const Icon(Icons.add),
                                     ),
                                   ),
+                                  controller: seedWordText,
                                   onChanged: (value) => con.seedWord = value,
                                   onEditingComplete: () {
                                     doAddSeedWord();
+                                    seedWordText.clear();
                                   },
                                 ),
                               ],
