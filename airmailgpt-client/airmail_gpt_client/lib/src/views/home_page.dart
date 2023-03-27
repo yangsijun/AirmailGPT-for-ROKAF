@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/services.dart';
 
 import 'package:airmail_gpt_client/src/view.dart';
@@ -27,6 +25,27 @@ class _HomePageState extends StateMVC<HomePage> {
 
   final FocusNode outFocusNode = FocusNode();
 
+  final _formKey = GlobalKey<FormState>();
+
+  final List<DropdownMenuEntry<String>> relationshipDropdownEntries = [
+    DropdownMenuEntry<String>(
+      value: '부모',
+      label: '부모',
+    ),
+    DropdownMenuEntry<String>(
+      value: '형제',
+      label: '형제',
+    ),
+    DropdownMenuEntry<String>(
+      value: '친구',
+      label: '친구',
+    ),
+    DropdownMenuEntry<String>(
+      value: '여자친구',
+      label: '여자친구',
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -42,10 +61,10 @@ class _HomePageState extends StateMVC<HomePage> {
 
   @override
   Widget buildWidget(BuildContext context) {
-    final formKey = GlobalKey<FormState>();
 
     void doAddSeedWord() {
       List<String>? result = con.addSeedWord();
+
       if (result == null) return;
       for (String element in result) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +94,7 @@ class _HomePageState extends StateMVC<HomePage> {
               builder: (context, dataObject) => Padding(
                 padding: const EdgeInsets.all(16),
                 child: Form(
-                  key: formKey,
+                  key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -91,6 +110,9 @@ class _HomePageState extends StateMVC<HomePage> {
                                   enabled: false,
                                   labelText: '받는 사람 이름',
                                 ),
+                                style: TextStyle(
+                                  color: Theme.of(context).disabledColor,
+                                ),
                                 validator: (value) => value!.isEmpty ? '받는 사람 이름을 입력해주세요' : null,
                                 initialValue: constantAirmanName,
                                 readOnly: true,
@@ -105,6 +127,9 @@ class _HomePageState extends StateMVC<HomePage> {
                                   enabled: false,
                                   labelText: '받는 사람 생년월일',
                                 ),
+                                style: TextStyle(
+                                  color: Theme.of(context).disabledColor,
+                                ),
                                 validator: (value) => value!.isEmpty ? '받는 사람 생년월일을 입력해주세요' : null,
                                 initialValue: constantAirmanBirth,
                                 readOnly: true,
@@ -115,15 +140,46 @@ class _HomePageState extends StateMVC<HomePage> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: '보내는 사람 이름',
-                        ),
-                        validator: (value) => value!.isEmpty ? '보내는 사람 이름을 입력해주세요' : null,
-                        initialValue: con.senderName,
-                        textInputAction: TextInputAction.next,
-                        onChanged: (value) => con.senderName = value,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: '보내는 사람 이름',
+                              ),
+                              validator: (value) => value!.isEmpty ? '보내는 사람 이름을 입력해주세요' : null,
+                              initialValue: con.senderName,
+                              textInputAction: TextInputAction.next,
+                              onChanged: (value) => con.senderName = value,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                return DropdownMenu(
+                                  width: constraints.maxWidth,
+                                  label: const Text('관계'),
+                                  inputDecorationTheme: const InputDecorationTheme(
+                                    contentPadding: EdgeInsets.all(22),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  controller: TextEditingController(text: con.relationship),
+                                  dropdownMenuEntries: List<DropdownMenuEntry<String>>.generate(
+                                    relationshipDropdownEntries.length,
+                                    (index) => DropdownMenuEntry(
+                                      value: relationshipDropdownEntries[index].value,
+                                      label: relationshipDropdownEntries[index].label,
+                                    ),
+                                  ),
+                                  onSelected: (value) => con.relationship = value!,
+                                );
+                              },
+                            )
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -163,8 +219,9 @@ class _HomePageState extends StateMVC<HomePage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                ListView(
-                                  shrinkWrap: true,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       '편지 키워드',
@@ -189,10 +246,10 @@ class _HomePageState extends StateMVC<HomePage> {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 Container(
                                   constraints: const BoxConstraints(
-                                    minHeight: 96,
+                                    minHeight: 48,
                                   ),
                                   width: double.infinity,
                                   child: ReorderableWrap(
@@ -205,7 +262,7 @@ class _HomePageState extends StateMVC<HomePage> {
                                     children: con.seedChipList,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 TextFormField(
                                   decoration: InputDecoration(
                                     border: const OutlineInputBorder(),
@@ -231,7 +288,7 @@ class _HomePageState extends StateMVC<HomePage> {
                         width: double.infinity,
                         child: FilledButton(
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
+                            if (_formKey.currentState!.validate()) {
                               con.sendMessage();
                             }
                           },
