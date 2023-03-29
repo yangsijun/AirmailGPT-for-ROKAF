@@ -1,4 +1,4 @@
-exports.sendMessage = async function (req, res) {
+exports.sendMail = async function (req, res) {
 
   const puppeteer = require("puppeteer");
 
@@ -19,22 +19,22 @@ exports.sendMessage = async function (req, res) {
 
     await page.evaluate(
       (mailWritePayload) => {
-        document.querySelector("#senderZipcode").value = mailWritePayload.senderZipcode;
-        document.querySelector("#senderAddr1").value = mailWritePayload.senderAddr1;
-        document.querySelector("#senderAddr2").value = mailWritePayload.senderAddr2;
-        document.querySelector("#senderName").value = mailWritePayload.senderName;
-        document.querySelector("#relationship").value = mailWritePayload.relationship;
-        document.querySelector("#title").value = mailWritePayload.title;
-        document.querySelector("#content").value = mailWritePayload.content;
+        document.querySelector("#senderZipcode").value = mailWritePayload.sender.Zipcode;
+        document.querySelector("#senderAddr1").value = mailWritePayload.sender.address1;
+        document.querySelector("#senderAddr2").value = mailWritePayload.sender.address2;
+        document.querySelector("#senderName").value = mailWritePayload.sender.name;
+        document.querySelector("#relationship").value = mailWritePayload.sender.relationship;
+        document.querySelector("#title").value = mailWritePayload.body.title;
+        document.querySelector("#content").value = mailWritePayload.body.content;
         document.querySelector("#password").value = mailWritePayload.password;
       },
-      mailWritePayload.senderZipcode,
-      mailWritePayload.senderAddr1,
-      mailWritePayload.senderAddr2,
-      mailWritePayload.senderName,
-      mailWritePayload.relationship,
-      mailWritePayload.title,
-      mailWritePayload.content,
+      mailWritePayload.sender.zipcode,
+      mailWritePayload.sender.address1,
+      mailWritePayload.sender.address2,
+      mailWritePayload.sender.Name,
+      mailWritePayload.sender.relationship,
+      mailWritePayload.body.title,
+      mailWritePayload.body.content,
       mailWritePayload.password
     );
 

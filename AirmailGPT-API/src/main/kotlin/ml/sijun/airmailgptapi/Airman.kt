@@ -1,6 +1,6 @@
 package ml.sijun.airmailgptapi
 
-class Airman(
+data class Airman(
     val name: String,
     val birth: String
 )

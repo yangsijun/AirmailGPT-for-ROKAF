@@ -21,7 +21,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jsoup:jsoup:1.15.4")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10")
-	implementation("org.mozilla:rhino:1.7R4")
+	implementation("org.mozilla:rhino:1.7.14")
+	implementation("org.mariadb.jdbc:mariadb-java-client:3.1.2")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

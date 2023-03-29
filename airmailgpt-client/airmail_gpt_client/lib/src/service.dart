@@ -1,1 +1,1 @@
-export 'package:airmail_gpt_client/src/services/message_service.dart';
+export 'package:airmail_gpt_client/src/services/mail_service.dart';
