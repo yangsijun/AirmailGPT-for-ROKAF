@@ -166,27 +166,16 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: LayoutBuilder(
-                              builder: (BuildContext context, BoxConstraints constraints) {
-                                return DropdownMenu(
-                                  width: constraints.maxWidth,
-                                  label: const Text('관계'),
-                                  inputDecorationTheme: const InputDecorationTheme(
-                                    contentPadding: EdgeInsets.all(22),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  controller: TextEditingController(text: con.relationship),
-                                  dropdownMenuEntries: List<DropdownMenuEntry<String>>.generate(
-                                    relationshipDropdownEntries.length,
-                                    (index) => DropdownMenuEntry(
-                                      value: relationshipDropdownEntries[index].value,
-                                      label: relationshipDropdownEntries[index].label,
-                                    ),
-                                  ),
-                                  onSelected: (value) => con.relationship = value!,
-                                );
-                              },
-                            )
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: '관계',
+                              ),
+                              validator: (value) => value!.isEmpty ? '관계를 입력해주세요' : null,
+                              initialValue: con.relationship,
+                              textInputAction: TextInputAction.next,
+                              onChanged: (value) => con.relationship = value,
+                            ),
                           ),
                         ],
                       ),
@@ -303,7 +292,7 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                               con.sendMail();
                             }
                           },
-                          child: const Text('인편 보내기'),
+                          child: const Text('인편 생성하기'),
                         ),
                       ),
                     ],

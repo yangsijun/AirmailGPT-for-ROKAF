@@ -24,8 +24,6 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
   final FocusNode outFocusNode = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
-  
-  final keywordText = TextEditingController();
 
   final List<DropdownMenuEntry<String>> relationshipDropdownEntries = const [
     DropdownMenuEntry<String>(
@@ -146,26 +144,15 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: LayoutBuilder(
-                              builder: (BuildContext context, BoxConstraints constraints) {
-                                return DropdownMenu(
-                                  width: constraints.maxWidth,
-                                  label: const Text('관계'),
-                                  inputDecorationTheme: const InputDecorationTheme(
-                                    contentPadding: EdgeInsets.all(22),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  controller: TextEditingController(text: con.sender.relationship),
-                                  dropdownMenuEntries: List<DropdownMenuEntry<String>>.generate(
-                                    relationshipDropdownEntries.length,
-                                    (index) => DropdownMenuEntry(
-                                      value: relationshipDropdownEntries[index].value,
-                                      label: relationshipDropdownEntries[index].label,
-                                    ),
-                                  ),
-                                  onSelected: (value) => con.sender.relationship = value!,
-                                );
-                              }
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: '관계',
+                              ),
+                              validator: (value) => value!.isEmpty ? '관계를 입력해주세요' : null,
+                              initialValue: con.sender.relationship,
+                              textInputAction: TextInputAction.next,
+                              onChanged: (value) => con.sender.relationship = value,
                             ),
                           ),
                         ],
