@@ -1,19 +1,23 @@
 package ml.sijun.airmailgptapi
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RestController
 
+@CrossOrigin(origins = [CLIENT_URL])
 @RestController
 class MailController {
 
     private final val service = MailService()
 
-    @PostMapping("/AirmailGPT-for-ROKAF/mails")
+    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails"], produces = ["application/json;charset=UTF-8"])
     fun sendMail(@RequestBody mail: Mail): String {
         return service.sendMail(mail)
     }
 
-    @PostMapping("/AirmailGPT-for-ROKAF/mails/generate")
+    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/generate"], produces = ["application/json;charset=UTF-8"])
     fun generateAiMail(@RequestBody generator: AiMailGenerator): MailBody {
         val response = service.requestToChatGPT(generator)
         val mailBody = processResponse(response)

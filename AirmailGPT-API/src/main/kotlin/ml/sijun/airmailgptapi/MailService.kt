@@ -25,7 +25,7 @@ class MailService {
                 "http://${NODEJS_URL}/AirmailGPT-for-ROKAF/mails",
                 mapOf(
                     "mailWriteUrl" to mailWriteURL,
-                    "mailWritePayload" to mail
+                    "mailWritePayload" to mail,
                 ),
                 String::class.java
             )
