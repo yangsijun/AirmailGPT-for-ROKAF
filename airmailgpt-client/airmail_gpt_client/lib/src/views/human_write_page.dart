@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:flutter/services.dart';
 
 import 'package:airmail_gpt_client/src/view.dart';
@@ -183,6 +185,23 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
                       TextFormField(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          enabled: false,
+                          labelText: '주소',
+                        ),
+                        style: TextStyle(
+                          color: Theme.of(context).disabledColor,
+                        ),
+                        readOnly: true,
+                        minLines: 3,
+                        maxLines: 5,
+                        initialValue: '$constantSenderZipcode\n$constantSenderAddress1\n$constantSenderAddress2',
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
                           labelText: '제목',
                         ),
                         validator: (value) => value!.isEmpty ? '제목을 입력해주세요' : null,
@@ -217,6 +236,11 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
                         child: FilledButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              con.sender.zipCode = constantSenderZipcode;
+                              con.sender.address1 = constantSenderAddress1;
+                              con.sender.address2 = constantSenderAddress2;
+                              con.airman.name = constantAirmanName;
+                              con.airman.birth = constantAirmanBirth;
                               con.sendMail();
                             }
                           },

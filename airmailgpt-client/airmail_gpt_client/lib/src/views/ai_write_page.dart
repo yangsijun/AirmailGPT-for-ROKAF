@@ -272,7 +272,7 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                                     ),
                                   ),
                                   controller: keywordText,
-                                  onChanged: (value) => con.keyword = value,
+                                  onChanged: (value) => con.keywordInput = value,
                                   onEditingComplete: () {
                                     doAddKeyword();
                                     keywordText.clear();
@@ -287,9 +287,17 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                       SizedBox(
                         width: double.infinity,
                         child: FilledButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              con.sendMail();
+                              con.airmanName = constantAirmanName;
+                              con.airmanBirth = constantAirmanBirth;
+                              if (con.keywordInput.isNotEmpty) {
+                                doAddKeyword();
+                              }
+                              con.keywordListToKeyword();
+                              await con.generateAiMail();
+                              if (!mounted) return;
+                              con.navigateToSendHumanWritePage(context);
                             }
                           },
                           child: const Text('인편 생성하기'),

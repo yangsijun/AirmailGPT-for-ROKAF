@@ -66,6 +66,14 @@ class SenderModel extends ModelMVC {
     _address2 = value;
     refresh();
   }
+
+  Map<String, dynamic> toJson() => {
+    'name': _name,
+    'relationship': _relationship,
+    'zipCode': _zipCode,
+    'address1': _address1,
+    'address2': _address2,
+  };
 }
 
 class AirmanModel extends ModelMVC {
@@ -83,11 +91,21 @@ class AirmanModel extends ModelMVC {
     _birth = value;
     refresh();
   }
+
+  Map<String, dynamic> toJson() => {
+    'name': _name,
+    'birth': _birth,
+  };
 }
 
 class MailBodyModel extends ModelMVC {
   String? _title;
   String? _content;
+
+  MailBodyModel({String? title, String? content}) {
+    _title = title;
+    _content = content;
+  }
 
   String? get title => _title;
   String? get content => _content;
@@ -100,4 +118,9 @@ class MailBodyModel extends ModelMVC {
     _content = value;
     refresh();
   }
+
+  Map<String, dynamic> toJson() => {
+    'title': _title,
+    'content': _content,
+  };
 }

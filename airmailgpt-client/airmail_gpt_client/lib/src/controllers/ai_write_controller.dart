@@ -27,15 +27,18 @@ class AiWriteController extends ControllerMVC {
 
   set airmanName(String value) {
     _mailModel.airman.name = value;
+    _generatorModel.airmanName = value;
   }
   set airmanBirth(String value) {
     _mailModel.airman.birth = value;
   }
   set senderName(String value) {
     _mailModel.sender.name = value;
+    _generatorModel.senderName = value;
   }
   set relationship(String value) {
     _mailModel.sender.relationship = value;
+    _generatorModel.relationship = value;
   }
   set keywordInput(String value) {
     _generatorModel.keywordInput = value;
@@ -53,8 +56,14 @@ class AiWriteController extends ControllerMVC {
     _mailModel.password = value;
   }
 
-  void sendMail() {
-    _service.sendMail(_mailModel);
+  void navigateToSendHumanWritePage(BuildContext context) {
+    Navigator.pushNamed(context, '/humanWrite');
+  }
+
+  Future<void> generateAiMail() async {
+    _mailModel.mailBody = await _service.generateAiMail(_generatorModel);
+    print('title: ${_mailModel.mailBody.title}');
+    print('content: ${_mailModel.mailBody.content}');
   }
 
   List<String>? addKeyword() {
@@ -104,6 +113,17 @@ class AiWriteController extends ControllerMVC {
     keywordList.insert(newIndex, keywordItem);
     final Chip keywordChipItem = keywordChipList.removeAt(oldIndex);
     keywordChipList.insert(newIndex, keywordChipItem);
+    refresh();
+  }
+
+  void clearKeyword() {
+    keywordList.clear();
+    keywordChipList.clear();
+    refresh();
+  }
+
+  void keywordListToKeyword() {
+    keyword = keywordList.join(', ');
     refresh();
   }
 }
