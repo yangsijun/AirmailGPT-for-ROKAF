@@ -2,18 +2,23 @@ import 'package:airmail_gpt_client/src/model.dart';
 import 'package:airmail_gpt_client/src/view.dart';
 import 'package:airmail_gpt_client/src/service.dart';
 
-class AiWriteController extends ControllerMVC {
-  factory AiWriteController([StateMVC? state]) => _this ??= AiWriteController._(state);
-  AiWriteController._(StateMVC? state)
+class AiWriteEditController extends ControllerMVC {
+  factory AiWriteEditController([StateMVC? state]) => _this ??= AiWriteEditController._(state);
+  AiWriteEditController._(StateMVC? state)
     : _mailModel = MailModel(),
       _generatorModel = AiMailGeneratorModel(),
       _service = MailService(),
+      _isMailGenerated = false,
       super(state);
-  static AiWriteController? _this;
+  static AiWriteEditController? _this;
 
   final MailModel _mailModel;
   final AiMailGeneratorModel _generatorModel;
   final MailService _service;
+
+  bool _isMailGenerated;
+
+  AiMailGeneratorModel get generatorModel => _generatorModel;
 
   String get airmanName => _mailModel.airman.name ??= '';
   String get airmanBirth => _mailModel.airman.birth ??= '';
@@ -25,6 +30,12 @@ class AiWriteController extends ControllerMVC {
   List<Chip> get keywordChipList => _generatorModel.keywordChipList ??= <Chip>[];
   String get password => _mailModel.password ??= '';
 
+  SenderModel get sender => _mailModel.sender;
+  AirmanModel get airman => _mailModel.airman;
+  MailBodyModel get mailBody => _mailModel.mailBody;
+
+  bool get isMailGenerated => _isMailGenerated;
+  
   set airmanName(String value) {
     _mailModel.airman.name = value;
     _generatorModel.airmanName = value;
@@ -56,14 +67,22 @@ class AiWriteController extends ControllerMVC {
     _mailModel.password = value;
   }
 
-  void navigateToSendHumanWritePage(BuildContext context) {
-    Navigator.pushNamed(context, '/humanWrite');
+  set isMailGenerated(bool value) {
+    _isMailGenerated = value;
   }
 
-  Future<void> generateAiMail() async {
+  void navigateToAiEditPage(BuildContext context) {
+    Navigator.pushNamed(context, '/aiEdit');
+  }
+
+  Future<bool> generateAiMail() async {
     _mailModel.mailBody = await _service.generateAiMail(_generatorModel);
+    if (_mailModel.mailBody.title == null || _mailModel.mailBody.content == null) {
+      return false;
+    }
     print('title: ${_mailModel.mailBody.title}');
     print('content: ${_mailModel.mailBody.content}');
+    return true;
   }
 
   List<String>? addKeyword() {
@@ -125,5 +144,9 @@ class AiWriteController extends ControllerMVC {
   void keywordListToKeyword() {
     keyword = keywordList.join(', ');
     refresh();
+  }
+
+  void sendMail() {
+    _service.sendMail(_mailModel);
   }
 }

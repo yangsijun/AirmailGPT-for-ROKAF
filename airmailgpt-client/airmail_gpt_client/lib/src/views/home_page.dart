@@ -41,35 +41,39 @@ class _HomePageState extends StateMVC<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '$constantAirmanName 인편 쓰기',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 16),
-            Row(
+      body: Stack(
+        children: [
+          Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    con.navigateToAiWritePage(context);
-                  },
-                  child: const Text('AI로 작성하기'),
+                Text(
+                  '$constantAirmanName 인편 쓰기',
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                const SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    con.navigateToHumanWritePage(context);
-                  },
-                  child: const Text('직접 작성하기'),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        con.navigateToAiWritePage(context);
+                      },
+                      child: const Text('AI로 작성하기'),
+                    ),
+                    const SizedBox(width: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        con.navigateToHumanWritePage(context);
+                      },
+                      child: const Text('직접 작성하기'),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        )
+            )
+          ),
+        ],
       ),
     );
   }

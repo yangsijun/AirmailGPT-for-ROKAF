@@ -16,7 +16,7 @@ class _MyAppState extends AppStateMVC<MyApp> {
       controller: AppController(),
       controllers: [
         HomeController(),
-        AiWriteController(),
+        AiWriteEditController(),
         HumanWriteController(),
       ],
       object: 'Hello!',
@@ -47,6 +47,7 @@ class _MyAppState extends AppStateMVC<MyApp> {
     routes: {
       '/': (context) => HomePage(key: UniqueKey()),
       '/aiWrite': (context) => AiWritePage(key: UniqueKey()),
+      '/aiEdit': (context) => AiEditPage(key: UniqueKey()),
       '/humanWrite': (context) => HumanWritePage(key: UniqueKey()),
     },
   );

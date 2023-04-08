@@ -1,5 +1,3 @@
-import 'dart:js_util';
-
 import 'package:flutter/services.dart';
 
 import 'package:airmail_gpt_client/src/view.dart';
@@ -87,46 +85,43 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(
-                        width: double.infinity,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabled: false,
-                                  labelText: '받는 사람 이름',
-                                ),
-                                style: TextStyle(
-                                  color: Theme.of(context).disabledColor,
-                                ),
-                                validator: (value) => value!.isEmpty ? '받는 사람 이름을 입력해주세요' : null,
-                                initialValue: constantAirmanName,
-                                readOnly: true,
-                                textInputAction: TextInputAction.next,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabled: false,
+                                labelText: '받는 사람 이름',
                               ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: TextFormField(
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  enabled: false,
-                                  labelText: '받는 사람 생년월일',
-                                ),
-                                style: TextStyle(
-                                  color: Theme.of(context).disabledColor,
-                                ),
-                                validator: (value) => value!.isEmpty ? '받는 사람 생년월일을 입력해주세요' : null,
-                                initialValue: constantAirmanBirth,
-                                readOnly: true,
-                                textInputAction: TextInputAction.next,
+                              style: TextStyle(
+                                color: Theme.of(context).disabledColor,
                               ),
+                              validator: (value) => value!.isEmpty ? '받는 사람 이름을 입력해주세요' : null,
+                              initialValue: constantAirmanName,
+                              readOnly: true,
+                              textInputAction: TextInputAction.next,
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                enabled: false,
+                                labelText: '받는 사람 생년월일',
+                              ),
+                              style: TextStyle(
+                                color: Theme.of(context).disabledColor,
+                              ),
+                              validator: (value) => value!.isEmpty ? '받는 사람 생년월일을 입력해주세요' : null,
+                              initialValue: constantAirmanBirth,
+                              readOnly: true,
+                              textInputAction: TextInputAction.next,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       Row(

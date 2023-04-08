@@ -8,4 +8,6 @@ export 'package:airmail_gpt_client/src/views/my_app.dart';
 
 export 'package:airmail_gpt_client/src/views/home_page.dart';
 export 'package:airmail_gpt_client/src/views/ai_write_page.dart';
+export 'package:airmail_gpt_client/src/views/ai_edit_page.dart';
+export 'package:airmail_gpt_client/src/views/ai_edit_page_skeleton.dart';
 export 'package:airmail_gpt_client/src/views/human_write_page.dart';

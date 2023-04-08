@@ -28,26 +28,34 @@ class MailService {
   }
 
   Future<MailBodyModel> generateAiMail(AiMailGeneratorModel generatorModel) async {
-    print('generateModel.senderName: ${generatorModel.senderName}');
-    print('generateModel.airmanName: ${generatorModel.airmanName}');
-    print('generateModel.relationship: ${generatorModel.relationship}');
-    print('generateModel.keyword: ${generatorModel.keyword}');
-    final response = await http.post(
-      Uri.parse('http://$constantApiDomain/AirmailGPT-for-ROKAF/mails/generate'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'senderName': generatorModel.senderName,
-        'airmanName': generatorModel.airmanName,
-        'relationship': generatorModel.relationship,
-        'keyword': generatorModel.keyword,
-      }),
-    );
+    try {
+      print('generateModel.senderName: ${generatorModel.senderName}');
+      print('generateModel.airmanName: ${generatorModel.airmanName}');
+      print('generateModel.relationship: ${generatorModel.relationship}');
+      print('generateModel.keyword: ${generatorModel.keyword}');
+      final response = await http.post(
+        Uri.parse('http://$constantApiDomain/AirmailGPT-for-ROKAF/mails/generate'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'senderName': generatorModel.senderName,
+          'airmanName': generatorModel.airmanName,
+          'relationship': generatorModel.relationship,
+          'keyword': generatorModel.keyword,
+        }),
+      );
 
-    return MailBodyModel(
-      title: jsonDecode(utf8.decode(response.bodyBytes))['title'] as String,
-      content: jsonDecode(utf8.decode(response.bodyBytes))['content'] as String,
-    );
+      return MailBodyModel(
+        title: jsonDecode(utf8.decode(response.bodyBytes))['title'] as String,
+        content: jsonDecode(utf8.decode(response.bodyBytes))['content'] as String,
+      );
+    } catch (e) {
+      print('error: $e');
+      return MailBodyModel(
+        title: null,
+        content: null,
+      );
+    }
   }
 }
