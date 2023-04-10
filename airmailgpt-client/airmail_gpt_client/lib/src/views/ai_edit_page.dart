@@ -5,8 +5,6 @@ import 'package:airmail_gpt_client/src/controller.dart';
 
 import 'package:airmail_gpt_client/res/setting.dart';
 
-import 'package:skeletons/skeletons.dart';
-
 class AiEditPage extends StatefulWidget {
   const AiEditPage({Key? key, this.title = 'AirmailGPT for ROKAF'}) : super(key: key);
 

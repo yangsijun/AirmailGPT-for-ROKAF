@@ -1,9 +1,6 @@
 import 'package:airmail_gpt_client/src/view.dart';
 
 class AiMailGeneratorModel extends ModelMVC {
-  // factory AiMailGeneratorModel([StateMVC? state]) => _this ??= AiMailGeneratorModel._(state);
-  // AiMailGeneratorModel._([StateMVC? state]) : super(state);
-  // static AiMailGeneratorModel? _this;
   AiMailGeneratorModel([StateMVC? state]) : super(state);
 
   String? _senderName;

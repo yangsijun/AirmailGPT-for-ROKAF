@@ -1,9 +1,6 @@
 import 'package:airmail_gpt_client/src/view.dart';
 
 class MailModel extends ModelMVC {
-  // factory MailModel([StateMVC? state]) => _this ??= MailModel._(state);
-  // MailModel._([StateMVC? state]) : super(state);
-  // static MailModel? _this;
   MailModel([StateMVC? state]) : super(state);
   
   SenderModel _sender = SenderModel();

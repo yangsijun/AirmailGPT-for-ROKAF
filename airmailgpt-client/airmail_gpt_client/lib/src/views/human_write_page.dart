@@ -25,25 +25,6 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final List<DropdownMenuEntry<String>> relationshipDropdownEntries = const [
-    DropdownMenuEntry<String>(
-      value: '부모',
-      label: '부모',
-    ),
-    DropdownMenuEntry<String>(
-      value: '형제',
-      label: '형제',
-    ),
-    DropdownMenuEntry<String>(
-      value: '친구',
-      label: '친구',
-    ),
-    DropdownMenuEntry<String>(
-      value: '여자친구',
-      label: '여자친구',
-    ),
-  ];
-
   @override
   void initState() {
     super.initState();

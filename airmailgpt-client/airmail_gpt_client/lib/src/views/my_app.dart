@@ -28,21 +28,6 @@ class _MyAppState extends AppStateMVC<MyApp> {
   Widget buildChild(BuildContext context) => MaterialApp(
     theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
     darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-    // home: FutureBuilder<bool>(
-    //   future: initAsync(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData) {
-    //       if (snapshot.data!) {
-    //         return HomePage(key: UniqueKey());
-    //       } else {
-    //         return const Text('Failed to startup');
-    //       }
-    //     } else if (snapshot.hasError) {
-    //       return Text('${snapshot.error}');
-    //     }
-    //     return const Center(child: CircularProgressIndicator());
-    //   }
-    // ),
     initialRoute: '/',
     routes: {
       '/': (context) => HomePage(key: UniqueKey()),
