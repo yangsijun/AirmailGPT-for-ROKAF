@@ -277,7 +277,7 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                                   }
                                   con.keywordListToKeyword();
                                   
-                                  con.navigateToAiEditPage(context);
+                                  con.editMail(context);
                                 }
                               },
                               child: const Text('인편 생성하기'),

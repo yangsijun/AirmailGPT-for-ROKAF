@@ -22,7 +22,7 @@ class MailService {
 
             val restTemplate = RestTemplate()
             result = restTemplate.postForObject(
-                "http://${NODEJS_URL}/AirmailGPT-for-ROKAF/mails",
+                "${NODEJS_URL}/AirmailGPT-for-ROKAF/mails",
                 mapOf(
                     "mailWriteUrl" to mailWriteURL,
                     "mailWritePayload" to mail,
@@ -30,11 +30,11 @@ class MailService {
                 String::class.java
             )
         } catch (e: IOException) {
-            saveMailToDataBase(mail, false)
+//            saveMailToDataBase(mail, false)
             return e.message.toString()
         }
 
-        saveMailToDataBase(mail, result == "success")
+//        saveMailToDataBase(mail, result == "success")
         return result.toString()
     }
 
@@ -103,7 +103,7 @@ class MailService {
                 "messages" to listOf(
                     mapOf(
                         "role" to "user",
-                        "content" to "'${generator.airmanName}'은 ${ENLIST_DATE}부터 공군 기본군사훈련단에서 훈련을 받고 있어. 나는 그의 ${generator.relationship}이며, 내 이름은 '${generator.senderName}'이야. 그에게 편지를 보내고자 해. 아래의 단어들과 관련된 편지를 작성해줘.\n${generator.keyword}.\n\n첫 줄은 제목"
+                        "content" to "편지를 받을 사람의 이름은 '${generator.airmanName}'이고, 그는 ${ENLIST_DATE}부터 공군 기본군사훈련단에서 훈련을 받고 있어. 나는 그의 ${generator.relationship}이며, 내 이름은 '${generator.senderName}'이야. 그에게 편지를 보내고자 해. 아래의 단어들과 관련된 편지를 작성해줘.\n${generator.keyword}.\n\n첫 줄은 제목"
                     )
                 )
             )

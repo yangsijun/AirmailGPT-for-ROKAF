@@ -67,9 +67,9 @@ exports.sendMail = async function (req, res) {
     );
 
     await browser.close();
-
+    console.log("success");
     res.send("success");
-
+    console.log("success!")
   } catch (error) {
     console.log(error);
     await browser.close();

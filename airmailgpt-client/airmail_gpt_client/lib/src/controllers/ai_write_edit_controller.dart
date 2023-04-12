@@ -1,6 +1,7 @@
+import 'package:airmail_gpt_client/src/controller.dart';
 import 'package:airmail_gpt_client/src/model.dart';
-import 'package:airmail_gpt_client/src/view.dart';
 import 'package:airmail_gpt_client/src/service.dart';
+import 'package:airmail_gpt_client/src/view.dart';
 
 class AiWriteEditController extends ControllerMVC {
   factory AiWriteEditController([StateMVC? state]) => _this ??= AiWriteEditController._(state);
@@ -8,7 +9,7 @@ class AiWriteEditController extends ControllerMVC {
     : _mailModel = MailModel(),
       _generatorModel = AiMailGeneratorModel(),
       _service = MailService(),
-      _isMailGenerated = false,
+      isMailGenerated = false,
       super(state);
   static AiWriteEditController? _this;
 
@@ -16,7 +17,7 @@ class AiWriteEditController extends ControllerMVC {
   final AiMailGeneratorModel _generatorModel;
   final MailService _service;
 
-  bool _isMailGenerated;
+  bool isMailGenerated;
 
   AiMailGeneratorModel get generatorModel => _generatorModel;
 
@@ -33,8 +34,6 @@ class AiWriteEditController extends ControllerMVC {
   SenderModel get sender => _mailModel.sender;
   AirmanModel get airman => _mailModel.airman;
   MailBodyModel get mailBody => _mailModel.mailBody;
-
-  bool get isMailGenerated => _isMailGenerated;
   
   set airmanName(String value) {
     _mailModel.airman.name = value;
@@ -67,22 +66,36 @@ class AiWriteEditController extends ControllerMVC {
     _mailModel.password = value;
   }
 
-  set isMailGenerated(bool value) {
-    _isMailGenerated = value;
+  void navigateToAiWritePage(BuildContext context) {
+    Navigator.pushNamed(context, '/aiWrite');
   }
 
   void navigateToAiEditPage(BuildContext context) {
     Navigator.pushNamed(context, '/aiEdit');
   }
 
+  void navigateToSendResultPage(BuildContext context) {
+    Navigator.pushNamed(context, '/sendResult');
+  }
+
+
   Future<bool> generateAiMail() async {
-    _mailModel.mailBody = await _service.generateAiMail(_generatorModel);
-    if (_mailModel.mailBody.title == null || _mailModel.mailBody.content == null) {
+    try {
+      isMailGenerated = false;
+      _mailModel.mailBody = await _service.generateAiMail(_generatorModel);
+      if (_mailModel.mailBody.title == null || _mailModel.mailBody.content == null) {
+        isMailGenerated = false;
+        return false;
+      }
+      print('title: ${_mailModel.mailBody.title}');
+      print('content: ${_mailModel.mailBody.content}');
+      isMailGenerated = true;
+      return true;
+    } catch (e) {
+      print(e);
+      isMailGenerated = false;
       return false;
     }
-    print('title: ${_mailModel.mailBody.title}');
-    print('content: ${_mailModel.mailBody.content}');
-    return true;
   }
 
   List<String>? addKeyword() {
@@ -146,7 +159,55 @@ class AiWriteEditController extends ControllerMVC {
     refresh();
   }
 
-  void sendMail() {
-    _service.sendMail(_mailModel);
+  void editMail(BuildContext context) {
+    navigateToAiEditPage(context);
+    (() => generateAiMail())
+      .call()
+      .then(
+        (value) {
+          if (value) {
+            setState(() {});
+          } else {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('인편 생성에 실패했습니다. 다시 시도해주세요.'),
+                duration: const Duration(seconds: 3),
+                action: SnackBarAction(
+                  label: '확인',
+                  onPressed: () {},
+                )
+              ),
+            );
+          }
+        }
+      );
+  }
+
+  void sendMail(BuildContext context) {
+    SendController sendController = SendController();
+    sendController.mailModel = _mailModel;
+    navigateToSendResultPage(context);
+    (() => sendController.sendMail())
+      .call()
+      .then(
+        (value) {
+          if (value == 'success') {
+            setState(() {});
+          } else {
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('인편 전송에 실패했습니다.'),
+                duration: const Duration(seconds: 3),
+                action: SnackBarAction(
+                  label: '확인',
+                  onPressed: () {},
+                ),
+              )
+            );
+          }
+        }
+      );
   }
 }

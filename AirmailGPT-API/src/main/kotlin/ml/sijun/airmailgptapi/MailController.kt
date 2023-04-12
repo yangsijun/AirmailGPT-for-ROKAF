@@ -13,8 +13,8 @@ class MailController {
     private final val service = MailService()
 
     @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails"], produces = ["application/json;charset=UTF-8"])
-    fun sendMail(@RequestBody mail: Mail): String {
-        return service.sendMail(mail)
+    fun sendMail(@RequestBody mail: Mail): Map<String, String> {
+        return mapOf("isSuccess" to service.sendMail(mail))
     }
 
     @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/generate"], produces = ["application/json;charset=UTF-8"])
@@ -55,5 +55,11 @@ class MailController {
         } catch (e: Exception) {
             throw AiMailGeneratorException("ChatGPT API 응답 처리 중 오류가 발생했습니다.", e)
         }
+    }
+
+    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/listUrl"], produces = ["application/json;charset=UTF-8"])
+    fun getMailListUrl(@RequestBody airman: Airman): Map<String, String> {
+        println("airman: ${airman.name}, ${airman.birth}")
+        return mapOf("mailListUrl" to service.getMailListUrl(airman))
     }
 }

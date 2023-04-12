@@ -217,7 +217,7 @@ class _HumanWritePageState extends StateMVC<HumanWritePage> {
                               con.sender.address2 = constantSenderAddress2;
                               con.airman.name = constantAirmanName;
                               con.airman.birth = constantAirmanBirth;
-                              con.sendMail();
+                              con.sendMail(context);
                             }
                           },
                           child: const Text('인편 보내기'),

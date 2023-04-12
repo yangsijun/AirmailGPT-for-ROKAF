@@ -18,6 +18,7 @@ class _MyAppState extends AppStateMVC<MyApp> {
         HomeController(),
         AiWriteEditController(),
         HumanWriteController(),
+        SendController(),
       ],
       object: 'Hello!',
     );
@@ -34,6 +35,7 @@ class _MyAppState extends AppStateMVC<MyApp> {
       '/aiWrite': (context) => AiWritePage(key: UniqueKey()),
       '/aiEdit': (context) => AiEditPage(key: UniqueKey()),
       '/humanWrite': (context) => HumanWritePage(key: UniqueKey()),
+      '/sendResult':(context) => SendResultPage(key: UniqueKey()),
     },
   );
 }

@@ -10,21 +10,28 @@ class MailService {
   MailService._();
   static MailService? _this;
 
-  void sendMail(MailModel model) {
-    print('model.airman.name: ${model.airman.name}');
-    print('model.airman: ${model.airman.toJson().toString()}');
-    http.post(
-      Uri.parse('http://$constantApiDomain/AirmailGPT-for-ROKAF/mails'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'sender': model.sender.toJson(),
-        'airman': model.airman.toJson(),
-        'body': model.mailBody.toJson(),
-        'password': model.password,
-      }),
-    );
+  Future<String> sendMail(MailModel model) async {
+    try {
+      print('model.airman.name: ${model.airman.name}');
+      print('model.airman: ${model.airman.toJson().toString()}');
+      final response = await http.post(
+        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'sender': model.sender.toJson(),
+          'airman': model.airman.toJson(),
+          'body': model.mailBody.toJson(),
+          'password': model.password,
+        }),
+      );
+
+      return jsonDecode(utf8.decode(response.bodyBytes))['isSuccess'] as String;
+    } catch (e) {
+      print('error: $e');
+      return 'error';
+    }
   }
 
   Future<MailBodyModel> generateAiMail(AiMailGeneratorModel generatorModel) async {
@@ -34,7 +41,7 @@ class MailService {
       print('generateModel.relationship: ${generatorModel.relationship}');
       print('generateModel.keyword: ${generatorModel.keyword}');
       final response = await http.post(
-        Uri.parse('http://$constantApiDomain/AirmailGPT-for-ROKAF/mails/generate'),
+        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails/generate'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -56,6 +63,29 @@ class MailService {
         title: null,
         content: null,
       );
+    }
+  }
+
+  Future<String> getMailListUrl(AirmanModel airman) async {
+    try {
+      print('airman: ${airman.toJson().toString()}');
+
+      final response = await http.post(
+        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails/listUrl'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': airman.name,
+          'birth': airman.birth,
+        }),
+      );
+
+      print(jsonDecode(utf8.decode(response.bodyBytes))['mailListUrl'] as String);
+      return jsonDecode(utf8.decode(response.bodyBytes))['mailListUrl'] as String;
+    } catch (e) {
+      print('error: $e');
+      return 'error';
     }
   }
 }
