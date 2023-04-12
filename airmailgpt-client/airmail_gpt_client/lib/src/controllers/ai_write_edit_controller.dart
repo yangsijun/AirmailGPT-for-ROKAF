@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:airmail_gpt_client/res/setting.dart';
 import 'package:airmail_gpt_client/src/controller.dart';
 import 'package:airmail_gpt_client/src/model.dart';
 import 'package:airmail_gpt_client/src/service.dart';
@@ -161,6 +164,65 @@ class AiWriteEditController extends ControllerMVC {
 
   void editMail(BuildContext context) {
     navigateToAiEditPage(context);
+    Timer t1 = Timer(
+      const Duration(seconds: 5),
+      () {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('ChatGPT가 인편을 생성중입니다. 잠시만 기다려주세요!'),
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: '확인',
+            onPressed: () {},
+          )
+        ),
+      );
+    });
+    Timer t2 = Timer(
+      const Duration(seconds: 11),
+      () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Raspberry Pi 홈 서버의 발열이 심합니다. 잠시만 더 기다려주세요!'),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: '확인',
+              onPressed: () {},
+            )
+          ),
+        );
+      }
+    );
+    Timer t3 = Timer(
+      const Duration(seconds: 17),
+      () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('지금 쯤 $constantAirmanName 훈련병은 어떤 생각을 하고 계실까요?'),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: '확인',
+              onPressed: () {},
+            )
+          ),
+        );
+      }
+    );
+    Timer t4 = Timer(
+      const Duration(seconds: 30),
+      () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('우와 30초 넘게 걸리려나봐요. 더 빨리 할 수 있도록 노력하겠습니다!'),
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: '확인',
+              onPressed: () {},
+            )
+          ),
+        );
+      }
+    );
     (() => generateAiMail())
       .call()
       .then(
@@ -169,6 +231,7 @@ class AiWriteEditController extends ControllerMVC {
             setState(() {});
           } else {
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Text('인편 생성에 실패했습니다. 다시 시도해주세요.'),
@@ -180,8 +243,14 @@ class AiWriteEditController extends ControllerMVC {
               ),
             );
           }
+          t1.cancel();
+          t2.cancel();
+          t3.cancel();
+          t4.cancel();
         }
       );
+    print('here');
+    return;
   }
 
   void sendMail(BuildContext context) {
@@ -196,6 +265,7 @@ class AiWriteEditController extends ControllerMVC {
             setState(() {});
           } else {
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: const Text('인편 전송에 실패했습니다.'),
