@@ -198,7 +198,7 @@ class AiWriteEditController extends ControllerMVC {
       () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('지금 쯤 $constantAirmanName 훈련병은 어떤 생각을 하고 계실까요?'),
+            content: Text('지금 쯤 ${airman.name} 훈련병은 어떤 생각을 하고 계실까요?'),
             duration: const Duration(seconds: 5),
             action: SnackBarAction(
               label: '확인',
