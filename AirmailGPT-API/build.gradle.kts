@@ -27,6 +27,10 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+
+	implementation ("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation ("mysql:mysql-connector-java:8.0.32")
 }
 
 tasks.withType<KotlinCompile> {

@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 class MailService {
 
     fun sendMail(@RequestBody mail: Mail): String {
-        var result: String? = null
+        val result: String?
         try {
             val mailWriteURL = getMailWriteUrl(getMemberSeq(mail.airman))
             println(mailWriteURL)
@@ -30,18 +30,25 @@ class MailService {
                 String::class.java
             )
         } catch (e: IOException) {
-//            saveMailToDataBase(mail, false)
+            try {
+                saveMailToDataBase(mail, false)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             return e.message.toString()
         }
-
-//        saveMailToDataBase(mail, result == "success")
+        try {
+            saveMailToDataBase(mail, result == "success")
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return result.toString()
     }
 
-    private fun saveMailToDataBase(mail: Mail, success: Boolean) {
+    fun saveMailToDataBase(mail: Mail, success: Boolean) {
         val connection = DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)
         val statement = connection.createStatement()
-        val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', '${success}')"
+        val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success, timestamp) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', ${success}, NOW())"
         statement.executeUpdate(sql)
     }
 
