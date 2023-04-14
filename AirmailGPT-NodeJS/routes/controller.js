@@ -32,7 +32,6 @@ exports.sendMail = async function (req, res) {
       // (mailWritePayload) => {
       (senderZipcode, senderAddr1, senderAddr2, senderName, relationship, title, contents, password) => {
         document.querySelector("#senderZipcode").value = senderZipcode;
-
         document.querySelector("#senderAddr1").value = senderAddr1;
         document.querySelector("#senderAddr2").value = senderAddr2;
         document.querySelector("#senderName").value = senderName;
@@ -40,14 +39,6 @@ exports.sendMail = async function (req, res) {
         document.querySelector("#title").value = title;
         document.querySelector("#contents").value = contents;
         document.querySelector("#password").value = password;
-        // document.querySelector("#senderZipcode").value = mailWritePayload.sender.zipCode;
-        // document.querySelector("#senderAddr1").value = mailWritePayload.sender.address1;
-        // document.querySelector("#senderAddr2").value = mailWritePayload.sender.address2;
-        // document.querySelector("#senderName").value = mailWritePayload.sender.name;
-        // document.querySelector("#relationship").value = mailWritePayload.sender.relationship;
-        // document.querySelector("#title").value = mailWritePayload.body.title;
-        // document.querySelector("#content").value = mailWritePayload.body.content;
-        // document.querySelector("#password").value = mailWritePayload.password;
       },
       // mailWritePayload
       senderZipcode,
