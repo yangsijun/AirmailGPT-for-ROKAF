@@ -7,3 +7,4 @@ package ml.sijun.airmailgptapi
 //const val DB_USER = "DB_USER"
 //const val DB_PASSWORD = "DB_PASSWORD"
 //const val CLIENT_URL = "http://localhost:54161"
+//const val RAPID_API_KEY = "RAPID_API_KEY"

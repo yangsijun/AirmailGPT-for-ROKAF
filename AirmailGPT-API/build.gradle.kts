@@ -25,7 +25,7 @@ dependencies {
 	implementation("org.mariadb.jdbc:mariadb-java-client:3.1.2")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 

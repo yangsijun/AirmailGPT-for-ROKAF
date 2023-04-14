@@ -1,5 +1,6 @@
 package ml.sijun.airmailgptapi
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.jsoup.Jsoup
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -123,6 +124,45 @@ class MailService {
         } catch (e: Exception) {
             throw AiMailGeneratorException("ChatGPT API 요청 중 오류가 발생했습니다.", e)
         }
+    }
+
+    fun getFootballFixture(league: Number, season: Number, from: String, to: String): String {
+        val restTemplate = RestTemplate()
+        val requestHeader = HttpHeaders()
+        requestHeader.set("X-RapidAPI-Key", RAPID_API_KEY)
+        requestHeader.set("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
+
+        val urlString = "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=$league&season=$season&from=$from&to=$to"
+        val requestEntity = HttpEntity<Any>(requestHeader)
+        val responseEntity = restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, String::class.java)
+        val response = responseEntity.body
+        println("response: $response")
+
+        val objectMapper = ObjectMapper()
+
+        val responseMap = objectMapper.readValue(response, Map::class.java)
+        val matchList = responseMap["response"] as List<Map<String, Any>>
+
+        val fixtureString = StringBuilder()
+        for (match in matchList) {
+            val fixture = match["fixture"] as Map<String, Any>
+            val teams = match["teams"] as Map<String, Any>
+            val home = teams["home"] as Map<String, Any>
+            val away = teams["away"] as Map<String, Any>
+            val goals = match["goals"] as Map<String, Any>
+            fixtureString.append(
+                """
+                    ${fixture["timezone"]} ${fixture["date"]} /
+                    ${home["name"]} vs ${away["name"]} /
+                    ${goals["home"] ?: "_"} : ${goals["away"] ?: "_"} ///
+                """.trimIndent()
+            )
+            fixtureString.append("${fixture["timezone"]} ${fixture["date"]}\n")
+            fixtureString.append("${home["name"]} vs ${away["name"]}\n")
+            fixtureString.append("${goals["home"] ?: "_"} : ${goals["away"] ?: "_"}\n\n")
+        }
+        println(fixtureString.toString())
+        return fixtureString.toString()
     }
 }
 
