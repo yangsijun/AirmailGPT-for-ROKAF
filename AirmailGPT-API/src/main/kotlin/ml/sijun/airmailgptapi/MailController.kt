@@ -98,4 +98,40 @@ class MailController {
             return mapOf("isSuccess" to "fail")
         }
     }
+
+    @PostMapping(value = ["/AirmailGPT-for-ROKAF/baseball/fixtures"], produces = ["application/json;charset=UTF-8"])
+    fun sendBaseballFixturesByLeagueId(@RequestBody param: Map<String, Any>): Map<String, String> {
+        try {
+            val fixtures = service.getBaseballFixture(
+                param["league"] as Number,
+                param["season"] as Number,
+                "${param["from"] as String}T00:00:00+09:00",
+                "${param["to"] as String}T23:59:59+09:00"
+            )
+            service.sendMail(
+                Mail(
+                    sender = Sender(
+                        name = "AirMailGPT Baseball",
+                        relationship = "Auto Generated",
+                        zipCode = "00000",
+                        address1 = "AirMailGPT",
+                        address2 = "Baseball"
+                    ),
+                    airman = Airman(
+                        name = param["name"] as String,
+                        birth = param["birth"] as String
+                    ),
+                    body = MailBody(
+                        title = "${param["from"] as String} ~ ${param["to"] as String} ${param["leagueName"] as String? ?: "야구"} 경기 일정 및 결과",
+                        content = fixtures
+                    ),
+                    password = param["password"] as String
+                )
+            )
+            return mapOf("isSuccess" to "success")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return mapOf("isSuccess" to "fail")
+        }
+    }
 }

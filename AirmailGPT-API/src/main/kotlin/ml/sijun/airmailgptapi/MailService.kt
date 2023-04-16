@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 import java.io.IOException
 import java.sql.DriverManager
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 
@@ -47,10 +49,14 @@ class MailService {
     }
 
     fun saveMailToDataBase(mail: Mail, success: Boolean) {
-        val connection = DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)
-        val statement = connection.createStatement()
-        val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success, timestamp) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', ${success}, NOW())"
-        statement.executeUpdate(sql)
+        try {
+            val connection = DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)
+            val statement = connection.createStatement()
+            val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success, timestamp) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', ${success}, NOW())"
+            statement.executeUpdate(sql)
+        } catch (e: Exception) {
+            throw RuntimeException("Failed to save mail to database", e)
+        }
     }
 
     fun getMailListUrl(airman: Airman): String {
@@ -132,7 +138,7 @@ class MailService {
         requestHeader.set("X-RapidAPI-Key", RAPID_API_KEY)
         requestHeader.set("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
 
-        val urlString = "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=$league&season=$season&from=$from&to=$to"
+        val urlString = "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=$league&season=$season&from=$from&to=$to&timezone=${FOOTBALL_TIMEZONE}"
         val requestEntity = HttpEntity<Any>(requestHeader)
         val responseEntity = restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, String::class.java)
         val response = responseEntity.body
@@ -154,12 +160,89 @@ class MailService {
                 """
                     ${fixture["timezone"]} ${fixture["date"]} /
                     ${home["name"]} vs ${away["name"]} /
-                    ${goals["home"] ?: "_"} : ${goals["away"] ?: "_"} ///
+                    ${goals["home"] ?: "_"} : ${goals["away"] ?: "_"} // 
                 """.trimIndent()
             )
             fixtureString.append("${fixture["timezone"]} ${fixture["date"]}\n")
             fixtureString.append("${home["name"]} vs ${away["name"]}\n")
             fixtureString.append("${goals["home"] ?: "_"} : ${goals["away"] ?: "_"}\n\n")
+        }
+        println(fixtureString.toString())
+        return fixtureString.toString()
+    }
+
+    fun getBaseballFixture(league: Number, season: Number, from: String, to: String): String {
+        val restTemplate = RestTemplate()
+        val requestHeader = HttpHeaders()
+        requestHeader.set("X-RapidAPI-Key", RAPID_API_KEY)
+        requestHeader.set("X-RapidAPI-Host", "api-baseball.p.rapidapi.com")
+
+        val urlString = "https://api-baseball.p.rapidapi.com/games?league=$league&season=$season&timezone=${BASEBALL_TIMEZONE}"
+        val requestEntity = HttpEntity<Any>(requestHeader)
+        val responseEntity = restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, String::class.java)
+        val response = responseEntity.body
+        println("response: $response")
+
+        val objectMapper = ObjectMapper()
+
+        val responseMap = objectMapper.readValue(response, Map::class.java)
+        val matchList = responseMap["response"] as List<Map<String, Any>>
+
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss+09:00")
+        val fromDate = LocalDateTime.parse(from, dateFormat)
+        val toDate = LocalDateTime.parse(to, dateFormat)
+        val fixtureString = StringBuilder()
+
+        var dateIter = LocalDateTime.MIN
+        for (match in matchList) {
+            val dateString = match["date"] as String
+            val date = LocalDateTime.parse(dateString, dateFormat)
+            // date check
+            if (date < fromDate || date > toDate) {
+                continue
+            }
+            if (dateIter != date) {
+                fixtureString.append(
+                    "%02d-%02d // ".format(date.monthValue, date.dayOfMonth)
+                )
+                dateIter = date
+            }
+            val status = match["status"] as Map<String, Any>
+            val teams = match["teams"] as Map<String, Any>
+            val home = teams["home"] as Map<String, Any>
+            val away = teams["away"] as Map<String, Any>
+            val scores = match["scores"] as Map<String, Any>
+            val homeScore = scores["home"] as Map<String, Any>
+            val homeInnings = homeScore["innings"] as Map<String, Any>
+            val awayScore = scores["away"] as Map<String, Any>
+            val awayInnings = awayScore["innings"] as Map<String, Any>
+
+            if (status["long"] == "Finished") {
+                if (home["id"] == BASEBALL_MY_TEAM_ID || away["id"] == BASEBALL_MY_TEAM_ID) {
+                    fixtureString.append(
+                        """
+                            ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
+                            ${homeScore["total"] ?: "_"} : ${awayScore["total"] ?: "_"} /
+                            ${getKboShortTeamName(away["id"] as Number)} : ${awayInnings["1"] ?: "_"} ${awayInnings["2"] ?: "_"} ${awayInnings["3"] ?: "_"} ${awayInnings["4"] ?: "_"} ${awayInnings["5"] ?: "_"} ${awayInnings["6"] ?: "_"} ${awayInnings["7"] ?: "_"} ${awayInnings["8"] ?: "_"} ${awayInnings["9"] ?: "_"} ${awayInnings["extra"] ?: ""} /
+                            ${getKboShortTeamName(home["id"] as Number)} : ${homeInnings["1"] ?: "_"} ${homeInnings["2"] ?: "_"} ${homeInnings["3"] ?: "_"} ${homeInnings["4"] ?: "_"} ${homeInnings["5"] ?: "_"} ${homeInnings["6"] ?: "_"} ${homeInnings["7"] ?: "_"} ${homeInnings["8"] ?: "_"} ${homeInnings["9"] ?: "_"} ${homeInnings["extra"] ?: ""} //
+                        """.trimIndent()
+                    )
+                } else {
+                    fixtureString.append(
+                        """
+                            ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
+                            ${homeScore["total"] ?: "_"} : ${awayScore["total"] ?: "_"} //
+                        """.trimIndent()
+                    )
+                }
+            } else {
+                fixtureString.append(
+                    """
+                        ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
+                        ${status["short"]} // 
+                    """.trimIndent()
+                )
+            }
         }
         println(fixtureString.toString())
         return fixtureString.toString()
