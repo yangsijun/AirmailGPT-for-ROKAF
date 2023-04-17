@@ -1,6 +1,12 @@
 package ml.sijun.airmailgptapi
 
-fun getKboShortTeamName(teamId: Number): String {
+fun getBaseballShortTeamName(leagueId: Number, teamId: Number): String? {
+    return when (leagueId) {
+        5 -> getKboShortTeamName(teamId)
+        else -> null
+    }
+}
+fun getKboShortTeamName(teamId: Number): String? {
     return when (teamId) {
         88 -> "두산"
         89 -> "한화"
@@ -12,6 +18,6 @@ fun getKboShortTeamName(teamId: Number): String {
         95 -> "NC"
         97 -> "삼성"
         647 -> "SSG"
-        else -> "error"
+        else -> null
     }
 }

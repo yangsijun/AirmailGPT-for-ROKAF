@@ -149,23 +149,26 @@ class MailService {
         val responseMap = objectMapper.readValue(response, Map::class.java)
         val matchList = responseMap["response"] as List<Map<String, Any>>
 
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss+09:00")
+
         val fixtureString = StringBuilder()
+
+        matchList.sortedBy {
+            (it["fixture"] as Map<String, Any>)["date"] as String
+        }
+
         for (match in matchList) {
             val fixture = match["fixture"] as Map<String, Any>
+            val date = LocalDateTime.parse(fixture["date"] as String, dateFormat)
             val teams = match["teams"] as Map<String, Any>
             val home = teams["home"] as Map<String, Any>
             val away = teams["away"] as Map<String, Any>
             val goals = match["goals"] as Map<String, Any>
             fixtureString.append(
-                """
-                    ${fixture["timezone"]} ${fixture["date"]} /
-                    ${home["name"]} vs ${away["name"]} /
-                    ${goals["home"] ?: "_"} : ${goals["away"] ?: "_"} // 
-                """.trimIndent()
+                "%02d-%02d %02d:%02d/".format(date.monthValue, date.dayOfMonth, date.hour, date.minute)
             )
-            fixtureString.append("${fixture["timezone"]} ${fixture["date"]}\n")
-            fixtureString.append("${home["name"]} vs ${away["name"]}\n")
-            fixtureString.append("${goals["home"] ?: "_"} : ${goals["away"] ?: "_"}\n\n")
+            fixtureString.append("${getFootballShortTeamName(league, home["id"] as Number) ?: home["name"]} vs ${getFootballShortTeamName(league, away["id"] as Number) ?: away["name"]}/")
+            fixtureString.append("${goals["home"] ?: "_"} : ${goals["away"] ?: "_"}//")
         }
         println(fixtureString.toString())
         return fixtureString.toString()
@@ -192,13 +195,13 @@ class MailService {
         val standing = standingList[0]
         val standingString = StringBuilder()
 
-        standingString.append("순위 팀 경기 승 무 패 승점 득실차 최근경기 // ")
+        standingString.append("순위 팀 경기 승 무 패 승점 득실차 최근경기// ")
         for (rank in standing) {
             val team = rank["team"] as Map<String, Any>
             val match = rank["all"] as Map<String, Any>
             standingString.append(
                 """
-                    ${rank["rank"]}. ${team["name"]} ${match["played"]} ${match["win"]} ${match["draw"]} ${match["lose"]} ${rank["points"]} ${rank["goalsDiff"]} ${rank["form"]} /
+                    ${rank["rank"]}. ${team["name"]} ${match["played"]} ${match["win"]} ${match["draw"]} ${match["lose"]} ${rank["points"]} ${rank["goalsDiff"]} ${rank["form"]}/
                 """.trimIndent()
             )
         }
@@ -238,7 +241,7 @@ class MailService {
             }
             if (dateIter != date) {
                 fixtureString.append(
-                    "%02d-%02d // ".format(date.monthValue, date.dayOfMonth)
+                    "%02d-%02d// ".format(date.monthValue, date.dayOfMonth)
                 )
                 dateIter = date
             }
@@ -252,31 +255,27 @@ class MailService {
             val awayScore = scores["away"] as Map<String, Any>
             val awayInnings = awayScore["innings"] as Map<String, Any>
 
-            if (status["long"] == "Finished") {
-                if (home["id"] == BASEBALL_MY_TEAM_ID || away["id"] == BASEBALL_MY_TEAM_ID) {
+            // home vs away
+            fixtureString.append(
+                """
+                    ${getBaseballShortTeamName(league, home["id"] as Number) ?: home["name"]} vs ${getBaseballShortTeamName(league, away["id"] as Number) ?: away["name"]}/
+                """.trimIndent()
+            )
+            if (status["long"] == "Finished") { // finished
+                // total score
+                fixtureString.append("${homeScore["total"] ?: "_"} : ${awayScore["total"] ?: "_"}//")
+                if (home["id"] == BASEBALL_MY_TEAM_ID || away["id"] == BASEBALL_MY_TEAM_ID) { // my team
+                    // inning score
                     fixtureString.append(
                         """
-                            ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
-                            ${homeScore["total"] ?: "_"} : ${awayScore["total"] ?: "_"} /
-                            ${getKboShortTeamName(away["id"] as Number)} : ${awayInnings["1"] ?: "_"} ${awayInnings["2"] ?: "_"} ${awayInnings["3"] ?: "_"} ${awayInnings["4"] ?: "_"} ${awayInnings["5"] ?: "_"} ${awayInnings["6"] ?: "_"} ${awayInnings["7"] ?: "_"} ${awayInnings["8"] ?: "_"} ${awayInnings["9"] ?: "_"} ${awayInnings["extra"] ?: ""} /
-                            ${getKboShortTeamName(home["id"] as Number)} : ${homeInnings["1"] ?: "_"} ${homeInnings["2"] ?: "_"} ${homeInnings["3"] ?: "_"} ${homeInnings["4"] ?: "_"} ${homeInnings["5"] ?: "_"} ${homeInnings["6"] ?: "_"} ${homeInnings["7"] ?: "_"} ${homeInnings["8"] ?: "_"} ${homeInnings["9"] ?: "_"} ${homeInnings["extra"] ?: ""} //
-                        """.trimIndent()
-                    )
-                } else {
-                    fixtureString.append(
-                        """
-                            ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
-                            ${homeScore["total"] ?: "_"} : ${awayScore["total"] ?: "_"} //
+                            ${getBaseballShortTeamName(league, away["id"] as Number) ?: away["name"]} : ${awayInnings["1"] ?: "_"} ${awayInnings["2"] ?: "_"} ${awayInnings["3"] ?: "_"} ${awayInnings["4"] ?: "_"} ${awayInnings["5"] ?: "_"} ${awayInnings["6"] ?: "_"} ${awayInnings["7"] ?: "_"} ${awayInnings["8"] ?: "_"} ${awayInnings["9"] ?: "_"} ${awayInnings["extra"] ?: ""}/
+                            ${getBaseballShortTeamName(league, home["id"] as Number) ?: home["name"]} : ${homeInnings["1"] ?: "_"} ${homeInnings["2"] ?: "_"} ${homeInnings["3"] ?: "_"} ${homeInnings["4"] ?: "_"} ${homeInnings["5"] ?: "_"} ${homeInnings["6"] ?: "_"} ${homeInnings["7"] ?: "_"} ${homeInnings["8"] ?: "_"} ${homeInnings["9"] ?: "_"} ${homeInnings["extra"] ?: ""}//
                         """.trimIndent()
                     )
                 }
-            } else {
-                fixtureString.append(
-                    """
-                        ${getKboShortTeamName(home["id"] as Number)} vs ${getKboShortTeamName(away["id"] as Number)} /
-                        ${status["short"]} // 
-                    """.trimIndent()
-                )
+            } else { // not finished
+                // print status
+                fixtureString.append("${status["short"]}//")
             }
         }
         println(fixtureString.toString())
@@ -302,7 +301,7 @@ class MailService {
         val standing = responseList[0]
         val standingString = StringBuilder()
 
-        standingString.append("순위 팀 경기 승 패 승률 최근경기 // ")
+        standingString.append("순위 팀 경기 승 패 승률 최근경기// ")
         for (rank in standing) {
             val team = rank["team"] as Map<String, Any>
             val games = rank["games"] as Map<String, Any>
@@ -310,7 +309,7 @@ class MailService {
             val lose = games["lose"] as Map<String, Any>
             standingString.append(
                 """
-                    ${rank["position"]}. ${getKboShortTeamName(team["id"] as Number)} ${games["played"]} ${win["total"]} ${lose["total"]} ${win["percentage"]} ${rank["form"]} /
+                    ${rank["position"]}. ${getKboShortTeamName(team["id"] as Number)} ${games["played"]} ${win["total"]} ${lose["total"]} ${win["percentage"]} ${rank["form"]}/
                 """.trimIndent()
             )
         }

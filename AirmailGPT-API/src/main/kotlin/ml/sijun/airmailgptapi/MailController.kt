@@ -120,7 +120,7 @@ class MailController {
                         birth = param["birth"] as String
                     ),
                     body = MailBody(
-                        title = "${param["season"] as String} ${param["leagueName"] as String? ?: "축구"} 순위",
+                        title = "${param["season"] as Number} ${param["leagueName"] as String? ?: "축구"} 순위",
                         content = standing
                     ),
                     password = param["password"] as String
@@ -190,7 +190,7 @@ class MailController {
                         birth = param["birth"] as String
                     ),
                     body = MailBody(
-                        title = "${param["season"] as String} ${param["leagueName"] as String? ?: "야구"} 순위",
+                        title = "${param["season"] as Number} ${param["leagueName"] as String? ?: "야구"} 순위",
                         content = standing
                     ),
                     password = param["password"] as String
