@@ -171,6 +171,41 @@ class MailService {
         return fixtureString.toString()
     }
 
+    fun getFootballStanding(league: Number, season: Number): String {
+        val restTemplate = RestTemplate()
+        val requestHeader = HttpHeaders()
+        requestHeader.set("X-RapidAPI-Key", RAPID_API_KEY)
+        requestHeader.set("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
+
+        val urlString = "https://api-football-v1.p.rapidapi.com/v3/standings?league=$league&season=$season"
+        val requestEntity = HttpEntity<Any>(requestHeader)
+        val responseEntity = restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, String::class.java)
+        val response = responseEntity.body
+        println("response: $response")
+
+        val objectMapper = ObjectMapper()
+
+        val responseMap = objectMapper.readValue(response, Map::class.java)
+        val responseList = responseMap["response"] as List<Map<String, Any>>
+        val leagueList = responseList[0]["league"] as Map<String, Any>
+        val standingList = leagueList["standings"] as List<List<Map<String, Any>>>
+        val standing = standingList[0]
+        val standingString = StringBuilder()
+
+        standingString.append("순위 팀 경기 승 무 패 승점 득실차 최근경기 // ")
+        for (rank in standing) {
+            val team = rank["team"] as Map<String, Any>
+            val match = rank["all"] as Map<String, Any>
+            standingString.append(
+                """
+                    ${rank["rank"]}. ${team["name"]} ${match["played"]} ${match["win"]} ${match["draw"]} ${match["lose"]} ${rank["points"]} ${rank["goalsDiff"]} ${rank["form"]} /
+                """.trimIndent()
+            )
+        }
+        println(standingString.toString())
+        return standingString.toString()
+    }
+
     fun getBaseballFixture(league: Number, season: Number, from: String, to: String): String {
         val restTemplate = RestTemplate()
         val requestHeader = HttpHeaders()
@@ -246,6 +281,41 @@ class MailService {
         }
         println(fixtureString.toString())
         return fixtureString.toString()
+    }
+
+    fun getBaseballStanding(league: Number, season: Number): String {
+        val restTemplate = RestTemplate()
+        val requestHeader = HttpHeaders()
+        requestHeader.set("X-RapidAPI-Key", RAPID_API_KEY)
+        requestHeader.set("X-RapidAPI-Host", "api-baseball.p.rapidapi.com")
+
+        val urlString = "https://api-baseball.p.rapidapi.com/standings?league=$league&season=$season"
+        val requestEntity = HttpEntity<Any>(requestHeader)
+        val responseEntity = restTemplate.exchange(urlString, HttpMethod.GET, requestEntity, String::class.java)
+        val response = responseEntity.body
+        println("response: $response")
+
+        val objectMapper = ObjectMapper()
+
+        val responseMap = objectMapper.readValue(response, Map::class.java)
+        val responseList = responseMap["response"] as List<List<Map<String, Any>>>
+        val standing = responseList[0]
+        val standingString = StringBuilder()
+
+        standingString.append("순위 팀 경기 승 패 승률 최근경기 // ")
+        for (rank in standing) {
+            val team = rank["team"] as Map<String, Any>
+            val games = rank["games"] as Map<String, Any>
+            val win = games["win"] as Map<String, Any>
+            val lose = games["lose"] as Map<String, Any>
+            standingString.append(
+                """
+                    ${rank["position"]}. ${getKboShortTeamName(team["id"] as Number)} ${games["played"]} ${win["total"]} ${lose["total"]} ${win["percentage"]} ${rank["form"]} /
+                """.trimIndent()
+            )
+        }
+        println(standingString.toString())
+        return standingString.toString()
     }
 }
 
