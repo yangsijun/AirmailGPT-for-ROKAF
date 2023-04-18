@@ -38,24 +38,22 @@ class _SendResultPageState extends StateMVC<SendResultPage> {
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 32),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.popUntil(context, ModalRoute.withName('/'));
-                    },
-                    child: const Text('메인으로 이동'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      con.launchMailListUrl();
-                    },
-                    child: const Text('보낸 인편 확인하기'),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    FilledButton(
+                      onPressed: () {
+                        Navigator.popUntil(context, ModalRoute.withName('/'));
+                      },
+                      child: const Text('메인으로 이동'),
+                    ),
+                    OutlinedButton(
+                      onPressed: () {
+                        con.launchMailListUrl();
+                      },
+                      child: const Text('보낸 인편 확인하기'),
+                    ),
+                  ],
                 ),
               ],
             )

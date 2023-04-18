@@ -99,7 +99,7 @@ class _HomePageState extends StateMVC<HomePage> {
                       child: const Text('AI로 작성하기'),
                     ),
                     const SizedBox(width: 16),
-                    FilledButton(
+                    ElevatedButton(
                       onPressed: () {
                         now = DateTime.now();
                         if (now.isBefore(constantMailStartDate) || now.isAfter(constantMailEndDate)) {
@@ -122,7 +122,7 @@ class _HomePageState extends StateMVC<HomePage> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(
+                OutlinedButton(
                       onPressed: () {
                         now = DateTime.now();
                         if (now.isBefore(constantMailStartDate) || now.isAfter(constantMailEndDate)) {
