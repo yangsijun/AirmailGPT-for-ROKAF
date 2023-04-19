@@ -19,6 +19,6 @@ class MailServiceTest {
         val success = true
 
         // Act
-        mailService.saveMailToDataBase(mail, success)
+        mailService.saveMailToDataBase(mail, success, "1234")
     }
 }

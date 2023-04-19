@@ -1,12 +1,9 @@
 package ml.sijun.airmailgptapi
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
-@CrossOrigin(origins = [CLIENT_URL])
+@CrossOrigin
 @RestController
 class MailController {
 
@@ -15,6 +12,11 @@ class MailController {
     @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails"], produces = ["application/json;charset=UTF-8"])
     fun sendMail(@RequestBody mail: Mail): Map<String, String> {
         return mapOf("isSuccess" to service.sendMail(mail))
+    }
+
+    @PostMapping(value = ["/AirmailGPT-for-ROKAF/test"], produces = ["application/json;charset=UTF-8"])
+    fun testSendMail(@RequestBody mail: Mail): Map<String, String> {
+        return mapOf("isSuccess" to service.testSendMail(mail))
     }
 
     @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/generate"], produces = ["application/json;charset=UTF-8"])
@@ -55,6 +57,11 @@ class MailController {
         } catch (e: Exception) {
             throw AiMailGeneratorException("ChatGPT API 응답 처리 중 오류가 발생했습니다.", e)
         }
+    }
+
+    @GetMapping(value = ["/"], produces = ["application/json;charset=UTF-8"])
+    fun getHello(): String {
+        return "Hello, World!"
     }
 
     @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/listUrl"], produces = ["application/json;charset=UTF-8"])

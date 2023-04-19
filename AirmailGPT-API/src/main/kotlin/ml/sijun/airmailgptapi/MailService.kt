@@ -50,6 +50,39 @@ class MailService {
         return result.toString()
     }
 
+    fun testSendMail(@RequestBody mail: Mail): String {
+        val result: String?
+        val memberSeq: String
+        try {
+            memberSeq = getMemberSeq(mail.airman)
+            val mailWriteUrl = getMailWriteUrl(memberSeq)
+            println(mailWriteUrl)
+
+            val restTemplate = RestTemplate()
+            result = restTemplate.postForObject(
+                "${NODEJS_URL}/AirmailGPT-for-ROKAF/test",
+                mapOf(
+                    "mailWriteUrl" to mailWriteUrl,
+                    "mailWritePayload" to mail,
+                ),
+                String::class.java
+            )
+        } catch (e: IOException) {
+            try {
+                saveMailToDataBase(mail, false, "dummy")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return e.message.toString()
+        }
+        try {
+            saveMailToDataBase(mail, result == "success", memberSeq)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return result.toString()
+    }
+
     fun saveMailToDataBase(mail: Mail, success: Boolean, memberSeq: String) {
         try {
             val connection = DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)

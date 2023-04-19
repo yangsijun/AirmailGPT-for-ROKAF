@@ -47,6 +47,7 @@ class _SendResultPageState extends StateMVC<SendResultPage> {
                       },
                       child: const Text('메인으로 이동'),
                     ),
+                    const SizedBox(width: 16),
                     OutlinedButton(
                       onPressed: () {
                         con.launchMailListUrl();

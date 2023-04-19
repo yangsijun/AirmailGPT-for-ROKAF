@@ -1,4 +1,5 @@
 import 'package:airmail_gpt_client/res/setting.dart';
+import 'package:airmail_gpt_client/src/model.dart';
 
 import 'package:airmail_gpt_client/src/view.dart';
 import 'package:airmail_gpt_client/src/controller.dart';
@@ -137,7 +138,10 @@ class _HomePageState extends StateMVC<HomePage> {
                             ),
                           );
                         } else {
-                          SendController().launchMailListUrl();
+                          SendController sendController = SendController();
+                          sendController.mailModel.airman.name = constantAirmanName;
+                          sendController.mailModel.airman.birth = constantAirmanBirth;
+                          sendController.launchMailListUrl();
                         }
                       },
                       child: const Text('보낸 인편 확인하기'),
