@@ -7,7 +7,7 @@ import 'package:airmail_gpt_client/src/controller.dart';
 import 'package:timer_builder/timer_builder.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, this.title = 'AirmailGPT for ROKAF'}) : super(key: key);
+  const HomePage({Key? key, this.title = 'AirmailGPT for ROKAF (Demo)'}) : super(key: key);
 
   final String title;
 
