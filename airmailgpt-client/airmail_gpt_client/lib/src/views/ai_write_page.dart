@@ -247,7 +247,10 @@ class _AiWritePageState extends StateMVC<AiWritePage> {
                                         labelText: '키워드 추가',
                                         suffixIcon: IconButton(
                                           padding: const EdgeInsets.all(20),
-                                          onPressed: doAddKeyword,
+                                          onPressed: () {
+                                            doAddKeyword();
+                                            keywordText.clear();
+                                          },
                                           icon: const Icon(Icons.add),
                                         ),
                                       ),
