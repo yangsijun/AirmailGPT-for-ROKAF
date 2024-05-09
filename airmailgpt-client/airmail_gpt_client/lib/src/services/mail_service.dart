@@ -15,7 +15,7 @@ class MailService {
       print('model.airman.name: ${model.airman.name}');
       print('model.airman: ${model.airman.toJson().toString()}');
       final response = await http.post(
-        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails'),
+        Uri.parse('$constantApiUrl/mails'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -41,7 +41,7 @@ class MailService {
       print('generateModel.relationship: ${generatorModel.relationship}');
       print('generateModel.keyword: ${generatorModel.keyword}');
       final response = await http.post(
-        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails/generate'),
+        Uri.parse('$constantApiUrl/mails/generate'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -71,7 +71,7 @@ class MailService {
       print('airman: ${airman.toJson().toString()}');
 
       final response = await http.post(
-        Uri.parse('$constantApiDomain/AirmailGPT-for-ROKAF/mails/listUrl'),
+        Uri.parse('$constantApiUrl/mails/listUrl'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
