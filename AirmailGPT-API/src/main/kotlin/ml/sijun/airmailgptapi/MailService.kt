@@ -9,7 +9,6 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.client.RestTemplate
 import java.io.IOException
-import java.sql.DriverManager
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
@@ -27,7 +26,7 @@ class MailService {
 
             val restTemplate = RestTemplate()
             result = restTemplate.postForObject(
-                "${NODEJS_URL}/AirmailGPT-for-ROKAF/mails",
+                "${NODEJS_URL}/mails",
                 mapOf(
                     "mailWriteUrl" to mailWriteUrl,
                     "mailWritePayload" to mail,
@@ -60,7 +59,7 @@ class MailService {
 
             val restTemplate = RestTemplate()
             result = restTemplate.postForObject(
-                "${NODEJS_URL}/AirmailGPT-for-ROKAF/test",
+                "${NODEJS_URL}/test",
                 mapOf(
                     "mailWriteUrl" to mailWriteUrl,
                     "mailWritePayload" to mail,
@@ -85,14 +84,15 @@ class MailService {
 
     fun saveMailToDataBase(mail: Mail, success: Boolean, memberSeq: String) {
         try {
-            val connection = DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)
-            val statement = connection.createStatement()
-            val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success, timestamp) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', ${success}, NOW())"
-            statement.executeUpdate(sql)
-            if (success) {
-                val sql2 = "INSERT INTO airman (member_seq, name, birth) VALUES ('${memberSeq}', '${mail.airman.name}', '${mail.airman.birth}')"
-                statement.executeUpdate(sql2)
-            }
+            // DEMO
+//            val connection = DriverManager.getConnection("${DB_URL}", DB_USER, DB_PASSWORD)
+//            val statement = connection.createStatement()
+//            val sql = "INSERT INTO mail (sender_name, sender_relationship, sender_zip_code, sender_address1, sender_address2, airman_name, airman_birth, title, content, password, success, timestamp) VALUES ('${mail.sender.name}', '${mail.sender.relationship}', '${mail.sender.zipCode}', '${mail.sender.address1}', '${mail.sender.address2}', '${mail.airman.name}', '${mail.airman.birth}', '${mail.body.title}', '${mail.body.content}', '${mail.password}', ${success}, NOW())"
+//            statement.executeUpdate(sql)
+//            if (success) {
+//                val sql2 = "INSERT INTO airman (member_seq, name, birth) VALUES ('${memberSeq}', '${mail.airman.name}', '${mail.airman.birth}')"
+//                statement.executeUpdate(sql2)
+//            }
         } catch (e: Exception) {
             throw RuntimeException("Failed to save mail to database", e)
         }
@@ -128,17 +128,19 @@ class MailService {
 
     private fun findMemberSeq(airman: Airman): String? {
         try {
-            // find memberSeq from DB
-            val connection =
-                DriverManager.getConnection("jdbc:mysql://${DB_URL}/airmailgpt-for-rokaf", DB_USER, DB_PASSWORD)
-            val statement = connection.createStatement()
-            val sql = "SELECT member_seq FROM airman WHERE name='${airman.name}' AND birth='${airman.birth}'"
-            val resultSet = statement.executeQuery(sql)
-            return if (resultSet.next()) {
-                resultSet.getString("member_seq")
-            } else {
-                null
-            }
+            return "DEMO_memberSeq"
+            // DEMO
+//            // find memberSeq from DB
+//            val connection =
+//                DriverManager.getConnection("${DB_URL}", DB_USER, DB_PASSWORD)
+//            val statement = connection.createStatement()
+//            val sql = "SELECT member_seq FROM airman WHERE name='${airman.name}' AND birth='${airman.birth}'"
+//            val resultSet = statement.executeQuery(sql)
+//            return if (resultSet.next()) {
+//                resultSet.getString("member_seq")
+//            } else {
+//                null
+//            }
         } catch (e: Exception) {
             throw RuntimeException("Failed to find memberSeq from database", e)
         }
@@ -178,11 +180,11 @@ class MailService {
             requestHeader.setBearerAuth(openaiApiKey)
 
             val postData = mapOf(
-                "model" to "gpt-3.5-turbo",
+                "model" to "gpt-3.5-turbo-0125",
                 "messages" to listOf(
                     mapOf(
                         "role" to "user",
-                        "content" to "편지를 받을 사람의 이름은 '${generator.airmanName}'이고, 그는 ${ENLIST_DATE}부터 공군 기본군사훈련단에서 훈련을 받고 있어. 나는 그의 ${generator.relationship}이며, 내 이름은 '${generator.senderName}'이야. 그에게 편지를 보내고자 해. 아래의 단어들과 관련된 편지를 작성해줘.\n${generator.keyword}.\n\n첫 줄은 제목"
+                        "content" to "너는 편지 대필 작가야. 편지를 받을 사람의 이름은 '${generator.airmanName}'이고, 그는 공군 기본군사훈련단에서 훈련을 받고 있어. 그에게 편지를 보내고자 해. 나는 그의 ${generator.relationship}이며, 내 이름은 '${generator.senderName}'이야. 아래의 단어들과 관련된 편지를 작성해줘.\n${generator.keyword}.\n\n첫 줄은 제목"
                     )
                 )
             )

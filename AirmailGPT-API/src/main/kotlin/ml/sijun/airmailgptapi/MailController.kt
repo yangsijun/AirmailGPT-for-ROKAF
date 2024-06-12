@@ -9,17 +9,17 @@ class MailController {
 
     private final val service = MailService()
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/mails"], produces = ["application/json;charset=UTF-8"])
     fun sendMail(@RequestBody mail: Mail): Map<String, String> {
         return mapOf("isSuccess" to service.sendMail(mail))
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/test"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/test"], produces = ["application/json;charset=UTF-8"])
     fun testSendMail(@RequestBody mail: Mail): Map<String, String> {
         return mapOf("isSuccess" to service.testSendMail(mail))
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/generate"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/mails/generate"], produces = ["application/json;charset=UTF-8"])
     fun generateAiMail(@RequestBody generator: AiMailGenerator): MailBody {
         val response = service.requestToChatGPT(generator)
         val mailBody = processResponse(response)
@@ -64,13 +64,13 @@ class MailController {
         return "Hello, World!"
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/mails/listUrl"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/mails/listUrl"], produces = ["application/json;charset=UTF-8"])
     fun getMailListUrl(@RequestBody airman: Airman): Map<String, String> {
         println("airman: ${airman.name}, ${airman.birth}")
         return mapOf("mailListUrl" to service.getMailListUrl(airman))
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/football/fixtures"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/football/fixtures"], produces = ["application/json;charset=UTF-8"])
     fun sendFootballFixturesByLeagueId(@RequestBody param: Map<String, Any>): Map<String, String> {
         try {
             val fixtures = service.getFootballFixture(
@@ -106,7 +106,7 @@ class MailController {
         }
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/football/standing"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/football/standing"], produces = ["application/json;charset=UTF-8"])
     fun sendFootballStandingByLeagueId(@RequestBody param: Map<String, Any>): Map<String, String> {
         try {
             val standing = service.getFootballStanding(
@@ -140,7 +140,7 @@ class MailController {
         }
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/baseball/fixtures"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/baseball/fixtures"], produces = ["application/json;charset=UTF-8"])
     fun sendBaseballFixturesByLeagueId(@RequestBody param: Map<String, Any>): Map<String, String> {
         try {
             val fixtures = service.getBaseballFixture(
@@ -176,7 +176,7 @@ class MailController {
         }
     }
 
-    @PostMapping(value = ["/AirmailGPT-for-ROKAF/baseball/standing"], produces = ["application/json;charset=UTF-8"])
+    @PostMapping(value = ["/baseball/standing"], produces = ["application/json;charset=UTF-8"])
     fun sendBaseballStandingByLeagueId(@RequestBody param: Map<String, Any>): Map<String, String> {
         try {
             val standing = service.getBaseballStanding(
