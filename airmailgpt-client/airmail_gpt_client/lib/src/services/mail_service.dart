@@ -12,8 +12,6 @@ class MailService {
 
   Future<String> sendMail(MailModel model) async {
     try {
-      print('model.airman.name: ${model.airman.name}');
-      print('model.airman: ${model.airman.toJson().toString()}');
       final response = await http.post(
         Uri.parse('$constantApiUrl/mails'),
         headers: <String, String>{
@@ -29,17 +27,12 @@ class MailService {
 
       return jsonDecode(utf8.decode(response.bodyBytes))['isSuccess'] as String;
     } catch (e) {
-      print('error: $e');
       return 'error';
     }
   }
 
   Future<MailBodyModel> generateAiMail(AiMailGeneratorModel generatorModel) async {
     try {
-      print('generateModel.senderName: ${generatorModel.senderName}');
-      print('generateModel.airmanName: ${generatorModel.airmanName}');
-      print('generateModel.relationship: ${generatorModel.relationship}');
-      print('generateModel.keyword: ${generatorModel.keyword}');
       final response = await http.post(
         Uri.parse('$constantApiUrl/mails/generate'),
         headers: <String, String>{
@@ -58,7 +51,6 @@ class MailService {
         content: jsonDecode(utf8.decode(response.bodyBytes))['content'] as String,
       );
     } catch (e) {
-      print('error: $e');
       return MailBodyModel(
         title: null,
         content: null,
@@ -68,8 +60,6 @@ class MailService {
 
   Future<String> getMailListUrl(AirmanModel airman) async {
     try {
-      print('airman: ${airman.toJson().toString()}');
-
       final response = await http.post(
         Uri.parse('$constantApiUrl/mails/listUrl'),
         headers: <String, String>{
@@ -81,10 +71,8 @@ class MailService {
         }),
       );
 
-      print(jsonDecode(utf8.decode(response.bodyBytes))['mailListUrl'] as String);
       return jsonDecode(utf8.decode(response.bodyBytes))['mailListUrl'] as String;
     } catch (e) {
-      print('error: $e');
       return 'error';
     }
   }

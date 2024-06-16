@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:airmail_gpt_client/res/setting.dart';
 import 'package:airmail_gpt_client/src/controller.dart';
 import 'package:airmail_gpt_client/src/model.dart';
 import 'package:airmail_gpt_client/src/service.dart';
@@ -90,12 +89,9 @@ class AiWriteEditController extends ControllerMVC {
         isMailGenerated = false;
         return false;
       }
-      print('title: ${_mailModel.mailBody.title}');
-      print('content: ${_mailModel.mailBody.content}');
       isMailGenerated = true;
       return true;
     } catch (e) {
-      print(e);
       isMailGenerated = false;
       return false;
     }
@@ -249,7 +245,6 @@ class AiWriteEditController extends ControllerMVC {
           t4.cancel();
         }
       );
-    print('here');
     return;
   }
 
@@ -268,7 +263,7 @@ class AiWriteEditController extends ControllerMVC {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('인편 전송에 실패했습니다.'),
+                content: const Text('인편 전송에 실패했습니다. (DEMO 버전)'),
                 duration: const Duration(seconds: 3),
                 action: SnackBarAction(
                   label: '확인',

@@ -21,7 +21,6 @@ class SendController extends ControllerMVC {
   Future<String> sendMail() async {
     isMailSent = false;
     String result = await _service.sendMail(mailModel);
-    print('result: $result');
     if (result == 'success') {
       isMailSent = true;
       setState(() {});

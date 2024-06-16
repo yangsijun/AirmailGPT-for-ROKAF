@@ -58,9 +58,9 @@ class _SendResultPageState extends StateMVC<SendResultPage> {
                 ),
               ],
             )
-          : Column(
+          : const Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
+              children: <Widget>[
                 Text(
                   '인편 전송 중입니다.',
                   style: TextStyle(fontSize: 20),

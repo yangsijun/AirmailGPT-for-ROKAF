@@ -4,8 +4,6 @@ import 'package:airmail_gpt_client/src/model.dart';
 import 'package:airmail_gpt_client/src/view.dart';
 import 'package:airmail_gpt_client/src/controller.dart';
 
-import 'package:airmail_gpt_client/res/setting.dart';
-
 class HumanWriteController extends ControllerMVC {
   factory HumanWriteController([StateMVC? state]) => _this ??= HumanWriteController._(state);
   HumanWriteController._(StateMVC? state)
@@ -102,7 +100,7 @@ class HumanWriteController extends ControllerMVC {
             Navigator.pop(context);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: const Text('인편 전송에 실패했습니다.'),
+                content: const Text('인편 전송에 실패했습니다. (DEMO 버전)'),
                 duration: const Duration(seconds: 3),
                 action: SnackBarAction(
                   label: '확인',

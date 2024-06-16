@@ -27,6 +27,7 @@ class _MyAppState extends AppStateMVC<MyApp> {
 
   @override
   Widget buildChild(BuildContext context) => MaterialApp(
+    title: "AirmailGPT for ROKAF",
     theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
     darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
     initialRoute: '/',
