@@ -18,23 +18,23 @@
 ## 스크린샷
 
 ### 1. 기존 공군 기본군사훈련단 인터넷편지 홈페이지
-<img style="height: 400px" src="./readme_img/readme_img1.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img1.jpg"/>
 
 (모바일 전용 웹 없음)
 
 ### 2. 메인 페이지
-<img style="height: 400px" src="./readme_img/readme_img2.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img2.jpg"/>
 
 ### 3. AI로 작성하기
-<img style="height: 400px" src="./readme_img/readme_img3.jpg"/>
-<img style="height: 400px" src="./readme_img/readme_img4.jpg"/>
-<img style="height: 400px" src="./readme_img/readme_img5.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img3.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img4.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img5.jpg"/>
 
 ### 4. 직접 작성하기
-<img style="height: 400px" src="./readme_img/readme_img6.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img6.jpg"/>
 
 ### 5. PWA 아이콘
-<img style="height: 400px" src="./readme_img/readme_img7.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img7.jpg"/>
 
 ### 6. PWA 실행화면
-<img style="height: 400px" src="./readme_img/readme_img8.jpg"/>
+<img style="height: 600px" src="./readme_img/readme_img8.jpg"/>
