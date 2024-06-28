@@ -1,15 +1,8 @@
-<style>
-    .mobile-screenshot {
-        height: 300px;
-    }
-</style>
-
-
 # AirmailGPT for ROKAF
 
 ## 개요
 - 공군 기본군사훈련단 인터넷편지 작성 경험을 향상시키는 웹 애플리케이션 개발 프로젝트
-- Demo 버전(Web): https://airmail.sijun.dev/ㄴ
+- Demo 버전(Web): https://airmail.sijun.dev/
 
 ## 기능
 1. 공군 기본군사훈련단 인터넷편지 대대 접근성 좋은 모바일 웹 및 PWA 지원
@@ -25,23 +18,23 @@
 ## 스크린샷
 
 ### 1. 기존 공군 기본군사훈련단 인터넷편지 홈페이지
-<img class="mobile-screenshot" src="./readme_img/readme_img1.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img1.jpg"/>
 
 (모바일 전용 웹 없음)
 
 ### 2. 메인 페이지
-<img class="mobile-screenshot" src="./readme_img/readme_img2.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img2.jpg"/>
 
 ### 3. AI로 작성하기
-<img class="mobile-screenshot" src="./readme_img/readme_img3.jpg"/>
-<img class="mobile-screenshot" src="./readme_img/readme_img4.jpg"/>
-<img class="mobile-screenshot" src="./readme_img/readme_img5.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img3.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img4.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img5.jpg"/>
 
 ### 4. 직접 작성하기
-<img class="mobile-screenshot" src="./readme_img/readme_img6.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img6.jpg"/>
 
 ### 5. PWA 아이콘
-<img class="mobile-screenshot" src="./readme_img/readme_img7.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img7.jpg"/>
 
 ### 6. PWA 실행화면
-<img class="mobile-screenshot" src="./readme_img/readme_img8.jpg"/>
+<img style="height: 400px" src="./readme_img/readme_img8.jpg"/>
